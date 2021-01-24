@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:ornek1/ui/page/auth/login_page/parts/preface_part.dart';
 import 'package:ornek1/ui/page/auth/login_page/parts/top_logo_part.dart';
+import 'package:ornek1/ui/page/auth/login_page/parts/user_mail_part.dart';
+import 'package:ornek1/ui/page/auth/login_page/parts/user_password_part.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -8,20 +11,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  bool _isPasswordHide = true;
-  FocusNode _fs1 = FocusNode();
-  FocusNode _fs2 = FocusNode();
   double shortestSide;
-  @override
-  void initState() {
-    super.initState();
-    _fs1.addListener(() {
-      setState(() {});
-    });
-    _fs2.addListener(() {
-      setState(() {});
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,14 +38,14 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              SizedBox(height: 60),
+              SizedBox(height: shortestSide / 8),
               TopLogoPart(shortestSide),
-              SizedBox(height: 10),
-              ...prefacePart,
-              SizedBox(height: 20),
-              userMailPart,
-              SizedBox(height: 2),
-              userPasswordPart,
+              SizedBox(height: shortestSide / 40),
+              PrefacePart(shortestSide),
+              SizedBox(height: shortestSide / 20),
+              UserMailPart(shortestSide),
+              SizedBox(height: shortestSide / 200),
+              UserPasswordPart(shortestSide),
               forgotPasswordPart,
               SizedBox(height: 10),
               loginButton,
@@ -70,136 +60,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  List<Widget> get prefacePart => [
-        Text(
-          'Hayatın Değerli.',
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.headline1,
-        ),
-        SizedBox(height: 20),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 50),
-          child: Text(
-            'Sevdikleriniz ile birlikte daha fazla vakit gerçimeniz için çalışıyoruz...',
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.subtitle1,
-          ),
-        ),
-      ];
-  Widget get userMailPart => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-        child: SizedBox(
-          child: TextFormField(
-            cursorHeight: 20,
-            focusNode: _fs1,
-            style: (_fs1.hasFocus)
-                ? Theme.of(context).textTheme.headline2
-                : Theme.of(context).textTheme.headline3,
-            decoration: InputDecoration(
-              contentPadding: const EdgeInsets.symmetric(vertical: 20),
-              hintText: 'E-Mail',
-              filled: true,
-              fillColor: Colors.white,
-              isDense: false,
-              border: OutlineInputBorder(
-                borderSide: BorderSide.none,
-                borderRadius: BorderRadius.circular(50.0),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Theme.of(context).primaryColor,
-                ),
-                borderRadius: BorderRadius.circular(50.0),
-              ),
-              prefixIcon: Padding(
-                padding: const EdgeInsets.only(left: 26, right: 16),
-                child: Icon(
-                  Icons.person,
-                  color: (_fs1.hasFocus)
-                      ? Theme.of(context).primaryColor
-                      : Theme.of(context).disabledColor,
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
-  Widget get userPasswordPart => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-        child: SizedBox(
-          child: TextFormField(
-            cursorHeight: 20,
-            focusNode: _fs2,
-            style: (_fs2.hasFocus)
-                ? Theme.of(context).textTheme.headline2
-                : Theme.of(context).textTheme.headline3,
-            obscureText: _isPasswordHide,
-            decoration: InputDecoration(
-              contentPadding: const EdgeInsets.symmetric(vertical: 20),
-              hintText: 'Password',
-              filled: true,
-              fillColor: Colors.white,
-              isDense: false,
-              border: OutlineInputBorder(
-                borderSide: BorderSide.none,
-                borderRadius: BorderRadius.circular(50.0),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Theme.of(context).primaryColor,
-                ),
-                borderRadius: BorderRadius.circular(50.0),
-              ),
-              prefixIcon: Padding(
-                padding: const EdgeInsets.only(left: 26, right: 16),
-                child: Icon(
-                  Icons.vpn_key,
-                  color: (_fs2.hasFocus)
-                      ? Theme.of(context).primaryColor
-                      : Theme.of(context).disabledColor,
-                ),
-              ),
-              suffixIcon: (_isPasswordHide)
-                  ? Padding(
-                      padding: const EdgeInsets.only(right: 20),
-                      child: IconButton(
-                        icon: Icon(
-                          Icons.visibility,
-                          color: (_fs2.hasFocus)
-                              ? Theme.of(context).primaryColor
-                              : Theme.of(context).disabledColor,
-                        ),
-                        onPressed: () {
-                          setState(
-                            () {
-                              _isPasswordHide = !_isPasswordHide;
-                            },
-                          );
-                        },
-                      ),
-                    )
-                  : Padding(
-                      padding: const EdgeInsets.only(right: 20),
-                      child: IconButton(
-                        icon: Icon(
-                          Icons.visibility_off,
-                          color: (_fs2.hasFocus)
-                              ? Theme.of(context).primaryColor
-                              : Theme.of(context).disabledColor,
-                        ),
-                        onPressed: () {
-                          setState(
-                            () {
-                              _isPasswordHide = !_isPasswordHide;
-                            },
-                          );
-                        },
-                      ),
-                    ),
-            ),
-          ),
-        ),
-      );
   Widget get forgotPasswordPart => Container(
         alignment: Alignment.centerRight,
         child: Padding(

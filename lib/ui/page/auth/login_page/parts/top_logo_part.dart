@@ -2,7 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class TopLogoPart extends StatelessWidget {
-  double shortestSide;
+  final double shortestSide;
+  final String icon1Path = 'assets/images/auth/cloud3.svg';
+  final String icon2Path = 'assets/images/auth/building1.svg';
+  final String icon3Path = 'assets/images/auth/cloud1.svg';
+  final String icon1Label = 'Cloud1';
+  final String icon2Label = 'Building';
+  final String icon3Label = 'Cloud2';
   TopLogoPart(this.shortestSide);
   @override
   Widget build(BuildContext context) {
@@ -20,26 +26,26 @@ class TopLogoPart extends StatelessWidget {
         children: [
           Container(),
           Positioned(
-            left: 100,
+            left: 80,
             top: -10,
             child: SvgPicture.asset(
-              'assets/images/auth/cloud3.svg',
-              semanticsLabel: 'Cloud3',
-              width: 110,
+              icon1Path,
+              semanticsLabel: icon1Label,
+              width: 80,
             ),
           ),
           SvgPicture.asset(
-            'assets/images/auth/building1.svg',
-            semanticsLabel: 'Building',
-            width: 160,
+            icon2Path,
+            semanticsLabel: icon2Label,
+            width: 120,
           ),
           Positioned(
             right: 60,
             top: -10,
             child: SvgPicture.asset(
-              'assets/images/auth/cloud1.svg',
-              semanticsLabel: 'Cloud1',
-              width: 120,
+              icon3Path,
+              semanticsLabel: icon3Label,
+              width: 80,
             ),
           ),
         ],
@@ -52,22 +58,22 @@ class TopLogoPart extends StatelessWidget {
             left: 100,
             top: -10,
             child: SvgPicture.asset(
-              'assets/images/auth/cloud3.svg',
-              semanticsLabel: 'Cloud3',
+              icon1Path,
+              semanticsLabel: icon1Label,
               width: 110,
             ),
           ),
           SvgPicture.asset(
-            'assets/images/auth/building1.svg',
-            semanticsLabel: 'Building',
+            icon2Path,
+            semanticsLabel: icon2Label,
             width: 160,
           ),
           Positioned(
             right: 60,
             top: -10,
             child: SvgPicture.asset(
-              'assets/images/auth/cloud1.svg',
-              semanticsLabel: 'Cloud1',
+              icon3Path,
+              semanticsLabel: icon3Label,
               width: 120,
             ),
           ),
@@ -78,26 +84,26 @@ class TopLogoPart extends StatelessWidget {
         children: [
           Container(),
           Positioned(
-            left: 100,
-            top: -10,
+            left: 130,
+            top: 0,
             child: SvgPicture.asset(
-              'assets/images/auth/cloud3.svg',
-              semanticsLabel: 'Cloud3',
-              width: 110,
+              icon1Path,
+              semanticsLabel: icon1Label,
+              width: 140,
             ),
           ),
           SvgPicture.asset(
-            'assets/images/auth/building1.svg',
-            semanticsLabel: 'Building',
-            width: 160,
+            icon2Path,
+            semanticsLabel: icon2Label,
+            width: 230,
           ),
           Positioned(
-            right: 60,
+            right: 80,
             top: -10,
             child: SvgPicture.asset(
-              'assets/images/auth/cloud1.svg',
-              semanticsLabel: 'Cloud1',
-              width: 120,
+              icon3Path,
+              semanticsLabel: icon3Label,
+              width: 150,
             ),
           ),
         ],
@@ -107,26 +113,26 @@ class TopLogoPart extends StatelessWidget {
         children: [
           Container(),
           Positioned(
-            left: 100,
+            left: 230,
             top: -10,
             child: SvgPicture.asset(
-              'assets/images/auth/cloud3.svg',
-              semanticsLabel: 'Cloud3',
-              width: 110,
+              icon1Path,
+              semanticsLabel: icon1Label,
+              width: 150,
             ),
           ),
           SvgPicture.asset(
-            'assets/images/auth/building1.svg',
-            semanticsLabel: 'Building',
-            width: 160,
+            icon2Path,
+            semanticsLabel: icon2Label,
+            width: 240,
           ),
           Positioned(
-            right: 60,
+            right: 160,
             top: -10,
             child: SvgPicture.asset(
-              'assets/images/auth/cloud1.svg',
-              semanticsLabel: 'Cloud1',
-              width: 120,
+              icon3Path,
+              semanticsLabel: icon3Label,
+              width: 180,
             ),
           ),
         ],
