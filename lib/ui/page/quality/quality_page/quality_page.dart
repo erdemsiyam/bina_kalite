@@ -6,6 +6,8 @@ import 'package:location/location.dart';
 import "dart:convert";
 import 'package:numberpicker/numberpicker.dart';
 import 'package:ornek1/ui/page/quality/location_pick_page/location_pick_page.dart';
+import 'package:ornek1/ui/page/quality/quality_page/page_views/abstract/IPageView.dart';
+import 'package:ornek1/ui/page/quality/quality_page/page_views/pv_01_konum.dart';
 
 class QualityPage extends StatefulWidget {
   @override
@@ -13,6 +15,9 @@ class QualityPage extends StatefulWidget {
 }
 
 class _QualityPage extends State<QualityPage> {
+  // NEWEST
+  double shortestSide;
+  // OLDY
   int _currentPage = 0;
   List<Widget> _slidePages = [];
   List<bool> _pageHatalar = List<bool>.generate(9, (i) => true);
@@ -33,6 +38,7 @@ class _QualityPage extends State<QualityPage> {
   @override
   void initState() {
     super.initState();
+    // OLD
     _slidePages.add(_page1());
     _slidePages.add(_page2());
     _slidePages.add(_page3());
@@ -52,6 +58,11 @@ class _QualityPage extends State<QualityPage> {
 
   @override
   Widget build(BuildContext context) {
+    // New
+    shortestSide = MediaQuery.of(context).size.shortestSide;
+    print('shortestSide :  ' + shortestSide.toString());
+    return Scaffold();
+    // Old
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(

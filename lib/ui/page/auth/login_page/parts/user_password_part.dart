@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ornek1/ui/constants/text_styles.dart';
-import 'package:ornek1/ui/utils/responsive.dart';
+import 'package:ornek1/ui/utils/Responsive.dart';
 
 class UserPasswordPart extends StatefulWidget {
   final double shortestSide;

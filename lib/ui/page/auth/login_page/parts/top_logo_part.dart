@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:ornek1/ui/utils/responsive.dart';
+import 'package:ornek1/ui/utils/Responsive.dart';
 
 class TopLogoPart extends StatelessWidget with Responsive {
   final double shortestSide;
