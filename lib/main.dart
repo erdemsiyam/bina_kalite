@@ -2,8 +2,8 @@ import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:ornek1/ui/page/auth/login_page/login_page.dart';
 import 'package:ornek1/ui/page/home/home_page.dart';
-import 'package:ornek1/ui/page/quality/location_pick_page.dart';
-import 'package:ornek1/ui/page/quality/quality_page.dart';
+import 'package:ornek1/ui/page/quality/location_pick_page/location_pick_page.dart';
+import 'package:ornek1/ui/page/quality/quality_page/quality_page.dart';
 import 'package:ornek1/ui/constants/constant.dart';
 
 main() => runApp(DevicePreview(

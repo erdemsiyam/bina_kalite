@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:location/location.dart';
 import "dart:convert";
 import 'package:numberpicker/numberpicker.dart';
-import 'package:ornek1/ui/page/quality/location_pick_page.dart';
+import 'package:ornek1/ui/page/quality/location_pick_page/location_pick_page.dart';
 
 class QualityPage extends StatefulWidget {
   @override
