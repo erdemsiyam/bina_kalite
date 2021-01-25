@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ornek1/ui/constants/text_styles.dart';
-import 'package:ornek1/utils/responsive.dart';
+import 'package:ornek1/ui/utils/responsive.dart';
 
 class PrefacePart extends StatelessWidget with Responsive {
   final double shortestSide;
