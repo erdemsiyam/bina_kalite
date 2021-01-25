@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ornek1/ui/constants/text_styles.dart';
+import 'package:ornek1/utils/responsive.dart';
 
-class PrefacePart extends StatelessWidget {
+class PrefacePart extends StatelessWidget with Responsive {
   final double shortestSide;
   final String title = 'Hayatın Değerli.';
   final String subTitle =
@@ -9,85 +10,36 @@ class PrefacePart extends StatelessWidget {
   PrefacePart(this.shortestSide);
   @override
   Widget build(BuildContext context) {
-    return (shortestSide <= 350)
-        ? size350
-        : (shortestSide <= 450)
-            ? size450
-            : (shortestSide <= 550)
-                ? size550
-                : bigest;
+    deviceType = shortestSide;
+    return Column(
+      children: [
+        Text(
+          title,
+          textAlign: TextAlign.center,
+          style: fit(
+            tsBuyukBaslik1_350,
+            tsBuyukBaslik1_450,
+            tsBuyukBaslik1_550,
+            tsBuyukBaslik1_bigest,
+          ),
+        ),
+        SizedBox(height: shortestSide / 20),
+        Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: fit(50, 50, 80, 180),
+          ),
+          child: Text(
+            subTitle,
+            textAlign: TextAlign.center,
+            style: fit(
+              tsKucukAciklama1_350,
+              tsKucukAciklama1_450,
+              tsKucukAciklama1_550,
+              tsKucukAciklama1_bigest,
+            ),
+          ),
+        ),
+      ],
+    );
   }
-
-  Widget get size350 => Column(
-        children: [
-          Text(
-            title,
-            textAlign: TextAlign.center,
-            style: tsBuyukBaslik1_350,
-          ),
-          SizedBox(height: 20),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 50),
-            child: Text(
-              subTitle,
-              textAlign: TextAlign.center,
-              style: tsKucukAciklama1_350,
-            ),
-          ),
-        ],
-      );
-  Widget get size450 => Column(
-        children: [
-          Text(
-            title,
-            textAlign: TextAlign.center,
-            style: tsBuyukBaslik1_450,
-          ),
-          SizedBox(height: 20),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 50),
-            child: Text(
-              subTitle,
-              textAlign: TextAlign.center,
-              style: tsKucukAciklama1_450,
-            ),
-          ),
-        ],
-      );
-  Widget get size550 => Column(
-        children: [
-          Text(
-            title,
-            textAlign: TextAlign.center,
-            style: tsBuyukBaslik1_550,
-          ),
-          SizedBox(height: shortestSide / 20),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 80),
-            child: Text(
-              subTitle,
-              textAlign: TextAlign.center,
-              style: tsKucukAciklama1_550,
-            ),
-          ),
-        ],
-      );
-  Widget get bigest => Column(
-        children: [
-          Text(
-            title,
-            textAlign: TextAlign.center,
-            style: tsBuyukBaslik1_bigest,
-          ),
-          SizedBox(height: 20),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 180),
-            child: Text(
-              subTitle,
-              textAlign: TextAlign.center,
-              style: tsKucukAciklama1_bigest,
-            ),
-          ),
-        ],
-      );
 }

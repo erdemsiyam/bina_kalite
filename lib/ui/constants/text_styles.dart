@@ -52,7 +52,7 @@ TextStyle tsKucukAciklama1_bigest = TextStyle(
   // Alt Başlık
   fontFamily: 'OpenSans',
   color: colorUnFocus,
-  fontSize: 24,
+  fontSize: 26,
 );
 //
 TextStyle tsInputAktif_350 = TextStyle(
@@ -97,3 +97,44 @@ TextStyle tsInputDeaktif_bigest = TextStyle(
   color: colorDark,
 );
 //
+TextStyle tsTextButton1_350 = TextStyle(
+  color: Colors.grey[700],
+  fontSize: 11,
+  fontWeight: FontWeight.bold,
+);
+TextStyle tsTextButton1_450 = TextStyle(
+  color: Colors.grey[700],
+  fontSize: 14,
+  fontWeight: FontWeight.bold,
+);
+TextStyle tsTextButton1_550 = TextStyle(
+  color: Colors.grey[700],
+  fontSize: 19,
+  fontWeight: FontWeight.bold,
+);
+TextStyle tsTextButton1_bigest = TextStyle(
+  color: Colors.grey[700],
+  fontSize: 24,
+  fontWeight: FontWeight.bold,
+);
+//
+TextStyle tsButton1_350 = TextStyle(
+  fontFamily: 'OpenSans',
+  fontSize: 15,
+  color: colorLight,
+);
+TextStyle tsButton1_450 = TextStyle(
+  fontFamily: 'OpenSans',
+  fontSize: 17,
+  color: colorLight,
+);
+TextStyle tsButton1_550 = TextStyle(
+  fontFamily: 'OpenSans',
+  fontSize: 26,
+  color: colorLight,
+);
+TextStyle tsButton1_bigest = TextStyle(
+  fontFamily: 'OpenSans',
+  fontSize: 32,
+  color: colorLight,
+);

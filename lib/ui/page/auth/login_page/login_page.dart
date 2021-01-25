@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:ornek1/ui/page/auth/login_page/parts/forgot_password_part.dart';
+import 'package:ornek1/ui/page/auth/login_page/parts/login_button_part.dart';
 import 'package:ornek1/ui/page/auth/login_page/parts/preface_part.dart';
+import 'package:ornek1/ui/page/auth/login_page/parts/social_label_part.dart';
+import 'package:ornek1/ui/page/auth/login_page/parts/social_login_buttons_part.dart';
 import 'package:ornek1/ui/page/auth/login_page/parts/top_logo_part.dart';
 import 'package:ornek1/ui/page/auth/login_page/parts/user_mail_part.dart';
 import 'package:ornek1/ui/page/auth/login_page/parts/user_password_part.dart';
@@ -44,150 +48,20 @@ class _LoginPageState extends State<LoginPage> {
               PrefacePart(shortestSide),
               SizedBox(height: shortestSide / 20),
               UserMailPart(shortestSide),
-              SizedBox(height: shortestSide / 200),
+              SizedBox(height: shortestSide / 100),
               UserPasswordPart(shortestSide),
-              forgotPasswordPart,
-              SizedBox(height: 10),
-              loginButton,
-              SizedBox(height: 18),
-              socialLabelPart,
-              SizedBox(height: 16),
-              socialLoginButtons,
+              ForgotPasswordPart(shortestSide),
+              SizedBox(height: shortestSide / 50),
+              LoginButtonPart(shortestSide),
+              SizedBox(height: shortestSide / 20),
+              SocialLabelPart(shortestSide),
+              SizedBox(height: shortestSide / 20),
+              SocialLoginButtonsPart(shortestSide),
+              SizedBox(height: shortestSide / 20),
             ],
           ),
         ),
       ),
     );
   }
-
-  Widget get forgotPasswordPart => Container(
-        alignment: Alignment.centerRight,
-        child: Padding(
-          padding: const EdgeInsets.only(right: 50),
-          child: TextButton(
-            onPressed: () {},
-            child: Text(
-              'Şifremi Unuttum',
-              style: TextStyle(
-                color: Colors.grey[700],
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
-      );
-  Widget get loginButton => Container(
-        margin: EdgeInsets.symmetric(horizontal: 80),
-        child: RaisedButton(
-          padding: EdgeInsets.symmetric(vertical: 20),
-          child: Text(
-            'LOG IN',
-            style: Theme.of(context).textTheme.button,
-          ),
-          color: Theme.of(context).primaryColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(60.0),
-          ),
-          onPressed: () {},
-        ),
-      );
-  Widget get socialLabelPart => Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 40, right: 20),
-              child: Divider(
-                color: Theme.of(context).disabledColor,
-              ),
-            ),
-          ),
-          Text(
-            'Sosyal Medya İle',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.grey[500],
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(right: 40, left: 20),
-              child: Divider(
-                color: Colors.grey[500],
-              ),
-            ),
-          ),
-        ],
-      );
-  Widget get socialLoginButtons => Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          SizedBox(width: 30),
-          InkWell(
-            onTap: () {},
-            child: SvgPicture.asset(
-              'assets/images/auth/facebook.svg',
-              semanticsLabel: 'Facebook Login',
-              width: 40,
-            ),
-          ),
-          InkWell(
-            child: SvgPicture.asset(
-              'assets/images/auth/google.svg',
-              semanticsLabel: 'Google Login',
-              width: 40,
-            ),
-          ),
-          InkWell(
-            child: SvgPicture.asset(
-              'assets/images/auth/twitter.svg',
-              semanticsLabel: 'Twitter Login',
-              width: 40,
-            ),
-          ),
-          InkWell(
-            child: SvgPicture.asset(
-              'assets/images/auth/linkedin.svg',
-              semanticsLabel: 'Linkedin Login',
-              width: 40,
-            ),
-          ),
-          // InkWell(
-          //   child: Image.asset(
-          //     '/images/auth/google.png',
-          //     width: 30,
-          //     height: 30,
-          //   ),
-          //   onTap: () {},
-          // ),
-          // InkWell(
-          //   child: Image.asset(
-          //     '/images/auth/facebook.png',
-          //     width: 30,
-          //     height: 30,
-          //   ),
-          //   onTap: () {},
-          // ),
-          // InkWell(
-          //   child: Image.asset(
-          //     '/images/auth/twitter.png',
-          //     width: 30,
-          //     height: 30,
-          //   ),
-          //   onTap: () {},
-          // ),
-          // InkWell(
-          //   child: Image.asset(
-          //     '/images/auth/linkedin.png',
-          //     width: 30,
-          //     height: 30,
-          //   ),
-          //   onTap: () {},
-          // ),
-          SizedBox(width: 30),
-        ],
-      );
 }
