@@ -5,9 +5,11 @@ import 'package:http/http.dart' as http;
 import 'package:location/location.dart';
 import "dart:convert";
 import 'package:numberpicker/numberpicker.dart';
+import 'package:ornek1/provider/quality_provider.dart';
 import 'package:ornek1/ui/page/quality/location_pick_page/location_pick_page.dart';
 import 'package:ornek1/ui/page/quality/quality_page/page_views/abstract/IPageView.dart';
 import 'package:ornek1/ui/page/quality/quality_page/page_views/pv_01_konum.dart';
+import 'package:provider/provider.dart';
 
 class QualityPage extends StatefulWidget {
   @override
@@ -17,6 +19,8 @@ class QualityPage extends StatefulWidget {
 class _QualityPage extends State<QualityPage> {
   // NEWEST
   double shortestSide;
+  List<IPageView> _pageViews = [];
+  QualityProvider _qualityProvider;
   // OLDY
   int _currentPage = 0;
   List<Widget> _slidePages = [];
@@ -59,10 +63,17 @@ class _QualityPage extends State<QualityPage> {
   @override
   Widget build(BuildContext context) {
     // New
+    _qualityProvider = Provider.of<QualityProvider>(context);
     shortestSide = MediaQuery.of(context).size.shortestSide;
     print('shortestSide :  ' + shortestSide.toString());
-    return Scaffold();
-    // Old
+    if (_pageViews.length == 0) {
+      _pageViews.add(
+        Pv01Konum(
+          shortestSide,
+          onLocationComplete: pageView1CompleteAnimate,
+        ),
+      );
+    }
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -85,20 +96,54 @@ class _QualityPage extends State<QualityPage> {
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              // Değişir Kısım
+              // Sabit değişir Kısım
+              // Icon
+              Container(
+                height: 240,
+                alignment: Alignment.center,
+                child: Container(
+                  padding: EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.white30,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    _pageViews[_currentPage].iconData,
+                    size: 100,
+                    color: Colors.blue,
+                  ),
+                ),
+              ),
+              // Başlık
+              Container(
+                alignment: Alignment.center,
+                height: 60,
+                child: Text(
+                  _pageViews[_currentPage].title,
+                  style: TextStyle(
+                    fontSize: 26,
+                    color: Colors.blue[900],
+                  ),
+                ),
+              ),
+              // Değişir Kısım (PageView)
               Expanded(
                 child: PageView.builder(
-                  physics: (_konumState == KonumState.Girilmedi ||
-                          _konumState == KonumState.Aliniyor ||
-                          _sonucErisildi)
+                  physics: (_qualityProvider.locationState ==
+                              LocationState.NOT_DONE ||
+                          _qualityProvider.locationState ==
+                              LocationState.LOADING ||
+                          _qualityProvider.doneState == DoneState.DONE)
                       ? NeverScrollableScrollPhysics()
                       : AlwaysScrollableScrollPhysics(),
                   scrollDirection: Axis.horizontal,
                   controller: _pageController,
                   onPageChanged: (int index) {
-                    veriKontrol(index);
-                    // son sorudaysa, sonuc sayfasına gitme
-                    if (!_sonucErisildi && index == 8 && _currentPage == 7) {
+                    veriKontrol(index); // TODO
+                    // TODO son sorudaysa, sonuc sayfasına gitme
+                    if (_qualityProvider.doneState != DoneState.DONE &&
+                        index == 8 &&
+                        _currentPage == 7) {
                       _pageController.previousPage(
                           duration: Duration(milliseconds: 300),
                           curve: Curves.ease);
@@ -108,12 +153,12 @@ class _QualityPage extends State<QualityPage> {
                       _currentPage = index;
                     });
                   },
-                  itemCount: _slidePages.length,
-                  itemBuilder: (ctx, i) => _slidePages[i],
+                  itemCount: _pageViews.length,
+                  itemBuilder: (ctx, i) => _pageViews[i] as Widget,
                 ),
               ),
               // Noktalar Kısım
-              (!_sonucErisildi)
+              (_qualityProvider.doneState != DoneState.DONE)
                   ? Container(
                       height: 60,
                       child: Row(
@@ -1138,6 +1183,14 @@ class _QualityPage extends State<QualityPage> {
           ),
         ],
       );
+  }
+
+  // NEW
+  void pageView1CompleteAnimate() {
+    _pageController.nextPage(
+      duration: Duration(milliseconds: 800),
+      curve: Curves.easeIn,
+    );
   }
 }
 
