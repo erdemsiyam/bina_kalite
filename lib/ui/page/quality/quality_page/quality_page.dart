@@ -2,13 +2,16 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import "dart:convert";
-import 'package:numberpicker/numberpicker.dart';
 import 'package:ornek1/provider/quality_provider.dart';
 import 'package:ornek1/ui/page/quality/quality_page/page_views/abstract/IPageView.dart';
 import 'package:ornek1/ui/page/quality/quality_page/page_views/pv_01_location.dart';
 import 'package:ornek1/ui/page/quality/quality_page/page_views/pv_02_age.dart';
 import 'package:ornek1/ui/page/quality/quality_page/page_views/pv_03_floors.dart';
 import 'package:ornek1/ui/page/quality/quality_page/page_views/pv_04_height.dart';
+import 'package:ornek1/ui/page/quality/quality_page/page_views/pv_05_corrosion.dart';
+import 'package:ornek1/ui/page/quality/quality_page/page_views/pv_06_area.dart';
+import 'package:ornek1/ui/page/quality/quality_page/page_views/pv_07_shop.dart';
+import 'package:ornek1/ui/page/quality/quality_page/page_views/pv_08_contiguous.dart';
 import 'package:provider/provider.dart';
 
 class QualityPage extends StatefulWidget {
@@ -32,23 +35,13 @@ class _QualityPage extends State<QualityPage> {
   // int _katSayisi = 1;
   // int _binaYuksekligi = 10;
   // int _korozyonVarMi = 0;
-  int _binaOturumAlani = 100;
-  int _zemindeMagazaVarMi = 0;
-  int _binaBitisikNizamMi = 0;
-  bool _sonucErisildi = false;
-  SonucState _sonucState = SonucState.Bos;
-  int _sonucRiskSeviye = 0;
-  String _sonucYazi = '';
-  @override
-  void initState() {
-    super.initState();
-    // OLD
-    _slidePages.add(_page6());
-    _slidePages.add(_page7());
-    _slidePages.add(_page8());
-    _slidePages.add(_page9()); // Sonuç Sayfası
-  }
-
+  // int _binaOturumAlani = 100;
+  // int _zemindeMagazaVarMi = 0;
+  // int _binaBitisikNizamMi = 0;
+  // bool _sonucErisildi = false;
+  // SonucState _sonucState = SonucState.Bos;
+  // int _sonucRiskSeviye = 0;
+  // String _sonucYazi = '';
   @override
   void dispose() {
     super.dispose();
@@ -71,6 +64,10 @@ class _QualityPage extends State<QualityPage> {
       _pageViews.add(Pv02Age());
       _pageViews.add(Pv03Floors());
       _pageViews.add(Pv04Height());
+      _pageViews.add(Pv05Corrosion());
+      _pageViews.add(Pv06Area());
+      _pageViews.add(Pv07Shop());
+      _pageViews.add(Pv08Contiguous());
     }
     return Scaffold(
       body: Container(
@@ -96,34 +93,39 @@ class _QualityPage extends State<QualityPage> {
             children: <Widget>[
               // Sabit değişir Kısım
               // Icon
-              Container(
-                height: 240,
-                alignment: Alignment.center,
-                child: Container(
-                  padding: EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.white30,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    _pageViews[_currentPage].iconData,
-                    size: 100,
-                    color: Colors.blue,
-                  ),
-                ),
-              ),
+              (_pageViews[_currentPage] is IPageViewSelection)
+                  ? Container(
+                      height: 240,
+                      alignment: Alignment.center,
+                      child: Container(
+                        padding: EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: Colors.white30,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          (_pageViews[_currentPage] as IPageViewSelection)
+                              .iconData,
+                          size: 100,
+                          color: Colors.blue,
+                        ),
+                      ),
+                    )
+                  : Container(),
               // Başlık
-              Container(
-                alignment: Alignment.center,
-                height: 60,
-                child: Text(
-                  _pageViews[_currentPage].title,
-                  style: TextStyle(
-                    fontSize: 26,
-                    color: Colors.blue[900],
-                  ),
-                ),
-              ),
+              (_pageViews[_currentPage] is IPageViewSelection)
+                  ? Container(
+                      alignment: Alignment.center,
+                      height: 60,
+                      child: Text(
+                        (_pageViews[_currentPage] as IPageViewSelection).title,
+                        style: TextStyle(
+                          fontSize: 26,
+                          color: Colors.blue[900],
+                        ),
+                      ),
+                    )
+                  : Container(),
               // Değişir Kısım (PageView)
               Expanded(
                 child: PageView.builder(
@@ -177,39 +179,6 @@ class _QualityPage extends State<QualityPage> {
     );
   }
 
-  Widget _logo(IconData selectedIcon) {
-    return Container(
-      height: 240,
-      alignment: Alignment.center,
-      child: Container(
-        padding: EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: Colors.white30,
-          shape: BoxShape.circle,
-        ),
-        child: Icon(
-          selectedIcon,
-          size: 100,
-          color: Colors.blue,
-        ),
-      ),
-    );
-  }
-
-  Widget _baslik(String icerik) {
-    return Container(
-      alignment: Alignment.center,
-      height: 60,
-      child: Text(
-        icerik,
-        style: TextStyle(
-          fontSize: 26,
-          color: Colors.blue[900],
-        ),
-      ),
-    );
-  }
-
   Widget _slideDot(int type) {
     return AnimatedContainer(
       duration: Duration(milliseconds: 150),
@@ -229,227 +198,6 @@ class _QualityPage extends State<QualityPage> {
     );
   }
 
-  Widget _page6() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      mainAxisSize: MainAxisSize.max,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        // Logo
-        _logo(Icons.my_location),
-        _baslik('Bina Oturum Alanı'),
-        // Soru İçeriği
-        Expanded(
-          child: Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    NumberPicker.integer(
-                      initialValue: _binaOturumAlani,
-                      minValue: 50,
-                      step: 50,
-                      maxValue: 500,
-                      textStyle: TextStyle(
-                        fontSize: 20,
-                        color: Colors.grey[300],
-                      ),
-                      selectedTextStyle: TextStyle(
-                        fontSize: 32,
-                        color: Colors.white,
-                      ),
-                      highlightSelectedValue: true,
-                      onChanged: (numy) {
-                        if (_sonucErisildi) return;
-                        setState(() {
-                          _binaOturumAlani = numy;
-                        });
-                        bittiKontrol();
-                      },
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 50.0),
-                      child: Text(
-                        'm²',
-                        style: TextStyle(
-                          fontSize: 22,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _page7() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      mainAxisSize: MainAxisSize.max,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        // Logo
-        _logo(Icons.fastfood),
-        _baslik('Zemin Katta Dükkan Var Mı?'),
-        // Soru İçeriği
-        Expanded(
-          child: Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      margin: EdgeInsets.symmetric(horizontal: 20),
-                      child: RaisedButton(
-                        padding: EdgeInsets.symmetric(vertical: 20),
-                        child: Icon(
-                          Icons.done,
-                          color: Colors.blue[800],
-                          size: 32,
-                        ),
-                        color: (_zemindeMagazaVarMi == 1)
-                            ? Colors.green[200]
-                            : Colors.blue[100],
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        onPressed: () {
-                          if (_sonucErisildi) return;
-                          setState(() {
-                            _zemindeMagazaVarMi = 1;
-                          });
-                          bittiKontrol();
-                        },
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.symmetric(horizontal: 20),
-                      child: RaisedButton(
-                        padding: EdgeInsets.symmetric(vertical: 20),
-                        child: Icon(
-                          Icons.close,
-                          color: Colors.blue[800],
-                          size: 32,
-                        ),
-                        color: (_zemindeMagazaVarMi == 2)
-                            ? Colors.green[200]
-                            : Colors.blue[100],
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        onPressed: () {
-                          if (_sonucErisildi) return;
-                          setState(() {
-                            _zemindeMagazaVarMi = 2;
-                          });
-                          bittiKontrol();
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _page8() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      mainAxisSize: MainAxisSize.max,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        // Logo
-        _logo(Icons.location_city),
-        _baslik('Bina Bitişik Nizam Mı?'),
-        // Soru İçeriği
-        Expanded(
-          child: Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      margin: EdgeInsets.symmetric(horizontal: 20),
-                      child: RaisedButton(
-                        padding: EdgeInsets.symmetric(vertical: 20),
-                        child: Icon(
-                          Icons.done,
-                          color: Colors.blue[800],
-                          size: 32,
-                        ),
-                        color: (_binaBitisikNizamMi == 1)
-                            ? Colors.green[200]
-                            : Colors.blue[100],
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        onPressed: () {
-                          if (_sonucErisildi) return;
-                          setState(() {
-                            _binaBitisikNizamMi = 1;
-                          });
-                          bittiKontrol();
-                        },
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.symmetric(horizontal: 20),
-                      child: RaisedButton(
-                        padding: EdgeInsets.symmetric(vertical: 20),
-                        child: Icon(
-                          Icons.close,
-                          color: Colors.blue[800],
-                          size: 32,
-                        ),
-                        color: (_binaBitisikNizamMi == 2)
-                            ? Colors.green[200]
-                            : Colors.blue[100],
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        onPressed: () {
-                          if (_sonucErisildi) return;
-                          setState(() {
-                            _binaBitisikNizamMi = 2;
-                          });
-                          bittiKontrol();
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
   bool veriKontrol(int nereyeKadarKontrol) {
     bool sonuc = true;
     // if (nereyeKadarKontrol > 0) {
@@ -460,27 +208,27 @@ class _QualityPage extends State<QualityPage> {
     //     _pageHatalar[0] = true;
     // }
 
-    if (nereyeKadarKontrol > 4) {
-      if (_korozyonVarMi == 0) {
-        _pageHatalar[4] = false;
-        sonuc = false;
-      } else
-        _pageHatalar[4] = true;
-    }
-    if (nereyeKadarKontrol > 6) {
-      if (_zemindeMagazaVarMi == 0) {
-        _pageHatalar[6] = false;
-        sonuc = false;
-      } else
-        _pageHatalar[6] = true;
-    }
-    if (nereyeKadarKontrol > 7) {
-      if (_binaBitisikNizamMi == 0) {
-        _pageHatalar[7] = false;
-        sonuc = false;
-      } else
-        _pageHatalar[7] = true;
-    }
+    // if (nereyeKadarKontrol > 4) {
+    //   if (_korozyonVarMi == 0) {
+    //     _pageHatalar[4] = false;
+    //     sonuc = false;
+    //   } else
+    //     _pageHatalar[4] = true;
+    // }
+    // if (nereyeKadarKontrol > 6) {
+    //   if (_zemindeMagazaVarMi == 0) {
+    //     _pageHatalar[6] = false;
+    //     sonuc = false;
+    //   } else
+    //     _pageHatalar[6] = true;
+    // }
+    // if (nereyeKadarKontrol > 7) {
+    //   if (_binaBitisikNizamMi == 0) {
+    //     _pageHatalar[7] = false;
+    //     sonuc = false;
+    //   } else
+    //     _pageHatalar[7] = true;
+    // }
     return sonuc;
   }
 
@@ -511,9 +259,9 @@ class _QualityPage extends State<QualityPage> {
       // "katSayisi": _katSayisi,
       // "binaYuksekligi": _binaYuksekligi,
       // "korozyonVarMi": _korozyonVarMi,
-      "binaOturumAlani": _binaOturumAlani,
-      "zemindeMagazaVarMi": _zemindeMagazaVarMi,
-      "binaBitisikNizamMi": _binaBitisikNizamMi
+      // "binaOturumAlani": _binaOturumAlani,
+      // "zemindeMagazaVarMi": _zemindeMagazaVarMi,
+      // "binaBitisikNizamMi": _binaBitisikNizamMi
     };
     final jsonString = json.encode(body);
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
@@ -528,221 +276,6 @@ class _QualityPage extends State<QualityPage> {
     setState(() {
       _sonucState = SonucState.Getirildi;
     });
-  }
-
-  Widget _page9() {
-    if (_sonucState == SonucState.Getiriliyor)
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          _baslik('İşleniyor...'),
-          Center(
-            child: SizedBox(
-              width: 100,
-              height: 100,
-              child: CircularProgressIndicator(
-                backgroundColor: Colors.blue[400],
-              ),
-            ),
-          ),
-        ],
-      );
-    if (_sonucState == SonucState.Getirildi)
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          SizedBox(height: 40),
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 40, right: 40),
-              child: Column(
-                children: [
-                  Text(
-                    _sonucYazi,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 26,
-                      color: Colors.blue[900],
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  RaisedButton(
-                    color: Colors.blue[100],
-                    child: Text(
-                      'Detay Göster',
-                      style: TextStyle(
-                        color: Colors.blue[800],
-                        fontSize: 18,
-                      ),
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                    onPressed: () {},
-                  ),
-                ],
-              ),
-            ),
-          ),
-          SizedBox(height: 10),
-          Row(
-            children: [
-              Container(
-                height: 40,
-                width: (_sonucRiskSeviye == 1) ? 350 : 50,
-                decoration: BoxDecoration(
-                  color: Colors.green[400],
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(10),
-                    bottomRight: Radius.circular(10),
-                  ),
-                ),
-                child: (_sonucRiskSeviye == 1)
-                    ? Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Text(
-                            "Düşük Risk",
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.white,
-                            ),
-                          ),
-                          SizedBox(width: 10),
-                        ],
-                      )
-                    : Container(),
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              Container(
-                height: 40,
-                width: (_sonucRiskSeviye == 2) ? 350 : 50,
-                decoration: BoxDecoration(
-                  color: Colors.yellow,
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(10),
-                    bottomRight: Radius.circular(10),
-                  ),
-                ),
-                child: (_sonucRiskSeviye == 2)
-                    ? Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Text(
-                            "Orta Risk",
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.white,
-                            ),
-                          ),
-                          SizedBox(width: 10),
-                        ],
-                      )
-                    : Container(),
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              Container(
-                height: 40,
-                width: (_sonucRiskSeviye == 3) ? 350 : 50,
-                decoration: BoxDecoration(
-                  color: Colors.orange,
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(10),
-                    bottomRight: Radius.circular(10),
-                  ),
-                ),
-                child: (_sonucRiskSeviye == 3)
-                    ? Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Text(
-                            "Yüksek Risk",
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.white,
-                            ),
-                          ),
-                          SizedBox(width: 10),
-                        ],
-                      )
-                    : Container(),
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              Container(
-                height: 40,
-                width: (_sonucRiskSeviye == 4) ? 350 : 50,
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(10),
-                    bottomRight: Radius.circular(10),
-                  ),
-                ),
-                child: (_sonucRiskSeviye == 4)
-                    ? Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Text(
-                            "Çok Yüksek Risk",
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.white,
-                            ),
-                          ),
-                          SizedBox(width: 10),
-                        ],
-                      )
-                    : Container(),
-              ),
-            ],
-          ),
-          SizedBox(height: 10),
-          IconButton(
-            icon: Icon(
-              Icons.refresh,
-              size: 40,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              setState(() {
-                _currentPage = 0;
-                _pageHatalar = List<bool>.generate(9, (i) => true);
-                // _konumState = KonumState.Girilmedi;
-                // _konum = null;
-                // _binaYasi = 0;
-                // _katSayisi = 1;
-                // _binaYuksekligi = 9;
-                // _korozyonVarMi = 0;
-                _binaOturumAlani = 100;
-                _zemindeMagazaVarMi = 0;
-                _binaBitisikNizamMi = 0;
-                _sonucErisildi = false;
-                _sonucState = SonucState.Bos;
-                _sonucRiskSeviye = 0;
-                _sonucYazi = "";
-                _pageController.jumpToPage(0);
-              });
-            },
-          ),
-        ],
-      );
   }
 
   // NEW

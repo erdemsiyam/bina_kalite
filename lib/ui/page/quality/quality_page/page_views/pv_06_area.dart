@@ -6,7 +6,7 @@ import 'package:ornek1/ui/page/quality/quality_page/page_views/enum/DotEnum.dart
 import 'package:ornek1/ui/utils/Responsive.dart';
 import 'package:provider/provider.dart';
 
-class Pv04Height extends StatelessWidget
+class Pv06Area extends StatelessWidget
     with Responsive
     implements IPageViewSelection {
   QualityProvider _qualityProvider;
@@ -14,23 +14,23 @@ class Pv04Height extends StatelessWidget
   Dot dot;
 
   @override
-  IconData iconData = Icons.format_line_spacing;
+  IconData iconData = Icons.my_location;
 
   @override
   double shortestSide;
 
   @override
-  String title = 'Bina Yüksekliği';
+  String title = 'Bina Oturum Alanı';
 
   @override
   bool check() {
     return true;
   }
 
-  int initValue = 9;
-  int minValue = 3;
-  int stepValue = 3;
-  int maxValue = 60;
+  int initValue = 100;
+  int minValue = 50;
+  int stepValue = 50;
+  int maxValue = 500;
 
   @override
   Widget build(BuildContext context) {
@@ -61,14 +61,14 @@ class Pv04Height extends StatelessWidget
                   ),
                   highlightSelectedValue: true,
                   onChanged: (numy) {
-                    _qualityProvider.setHeight(numy);
+                    _qualityProvider.setArea(numy);
                     // bittiKontrol();
                   },
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 50.0),
                   child: Text(
-                    'm',
+                    'm²',
                     style: TextStyle(
                       fontSize: 22,
                       color: Colors.white,

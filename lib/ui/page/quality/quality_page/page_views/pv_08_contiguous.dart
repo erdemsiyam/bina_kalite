@@ -5,7 +5,7 @@ import 'package:ornek1/ui/page/quality/quality_page/page_views/enum/DotEnum.dart
 import 'package:ornek1/ui/utils/Responsive.dart';
 import 'package:provider/provider.dart';
 
-class Pv05Corrosion extends StatelessWidget
+class Pv08Contiguous extends StatelessWidget
     with Responsive
     implements IPageViewSelection {
   QualityProvider _qualityProvider;
@@ -13,17 +13,19 @@ class Pv05Corrosion extends StatelessWidget
   Dot dot;
 
   @override
-  IconData iconData = Icons.water_damage;
+  IconData iconData = Icons.location_city;
 
   @override
   double shortestSide;
 
   @override
-  String title = 'Korozyon Var Mı?';
+  String title = 'Bina Bitişik Nizam Mı?';
 
   @override
   bool check() {
-    return (_qualityProvider.corrosion != CorrosionAnswer.INIT) ? true : false;
+    return (_qualityProvider.contiguous != ContiguousAnswer.INIT)
+        ? true
+        : false;
   }
 
   @override
@@ -49,14 +51,14 @@ class Pv05Corrosion extends StatelessWidget
                       color: Colors.blue[800],
                       size: 32,
                     ),
-                    color: (_qualityProvider.corrosion == CorrosionAnswer.YES)
+                    color: (_qualityProvider.contiguous == ContiguousAnswer.YES)
                         ? Colors.green[200]
                         : Colors.blue[100],
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.0),
                     ),
                     onPressed: () {
-                      _qualityProvider.setCorrosion(CorrosionAnswer.YES);
+                      _qualityProvider.setContiguous(ContiguousAnswer.YES);
                       // bittiKontrol();
                     },
                   ),
@@ -70,14 +72,14 @@ class Pv05Corrosion extends StatelessWidget
                       color: Colors.blue[800],
                       size: 32,
                     ),
-                    color: (_qualityProvider.corrosion == CorrosionAnswer.NO)
+                    color: (_qualityProvider.contiguous == ContiguousAnswer.NO)
                         ? Colors.red[200]
                         : Colors.blue[100],
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.0),
                     ),
                     onPressed: () {
-                      _qualityProvider.setCorrosion(CorrosionAnswer.NO);
+                      _qualityProvider.setContiguous(ContiguousAnswer.NO);
                       // bittiKontrol();
                     },
                   ),

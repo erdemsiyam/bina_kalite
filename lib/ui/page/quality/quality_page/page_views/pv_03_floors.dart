@@ -6,7 +6,9 @@ import 'package:ornek1/ui/page/quality/quality_page/page_views/enum/DotEnum.dart
 import 'package:ornek1/ui/utils/Responsive.dart';
 import 'package:provider/provider.dart';
 
-class Pv03Floors extends StatelessWidget with Responsive implements IPageView {
+class Pv03Floors extends StatelessWidget
+    with Responsive
+    implements IPageViewSelection {
   QualityProvider _qualityProvider;
   @override
   Dot dot;

@@ -10,27 +10,29 @@ enum DeviceLocationResultState {
   DONE
 }
 enum ManuelLocationResultState { INIT, DONE }
-enum DoneState { INIT, DONE }
+enum CorrosionAnswer { INIT, YES, NO }
+enum ShopAnswer { INIT, YES, NO }
+enum ContiguousAnswer { INIT, YES, NO }
+enum DoneState { INIT, LOADING, DONE }
 
 class QualityProvider with ChangeNotifier {
   /* STATES */
   LocationState locationState = LocationState.INIT;
-  DoneState doneState = DoneState.INIT;
   DeviceLocationResultState deviceLocationResultState =
       DeviceLocationResultState.INIT;
   ManuelLocationResultState manuelLocationResultState =
       ManuelLocationResultState.INIT;
+  DoneState doneState = DoneState.INIT;
 
   /* PROPERTIES */
   LatLng location;
   int age;
   int floors;
   int height;
-  int korozyonVarMi = 0;
-  int binaOturumAlani = 100;
-  int zemindeMagazaVarMi = 0;
-  int binaBitisikNizamMi = 0;
-  bool sonucErisildi = false;
+  CorrosionAnswer corrosion;
+  int area;
+  ShopAnswer shop;
+  ContiguousAnswer contiguous;
 
   Future<DeviceLocationResultState> getLocationFromDevice() async {
     Location locationService = new Location();
@@ -105,6 +107,26 @@ class QualityProvider with ChangeNotifier {
 
   void setHeight(int val) {
     height = val;
+    notifyListeners();
+  }
+
+  void setCorrosion(CorrosionAnswer answer) {
+    corrosion = answer;
+    notifyListeners();
+  }
+
+  void setArea(int val) {
+    area = val;
+    notifyListeners();
+  }
+
+  void setShop(ShopAnswer answer) {
+    shop = answer;
+    notifyListeners();
+  }
+
+  void setContiguous(ContiguousAnswer answer) {
+    contiguous = answer;
     notifyListeners();
   }
 }

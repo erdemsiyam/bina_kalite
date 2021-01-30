@@ -5,25 +5,26 @@ import 'package:ornek1/ui/page/quality/quality_page/page_views/enum/DotEnum.dart
 import 'package:ornek1/ui/utils/Responsive.dart';
 import 'package:provider/provider.dart';
 
-class Pv05Corrosion extends StatelessWidget
+class Pv07Shop extends StatelessWidget
     with Responsive
     implements IPageViewSelection {
   QualityProvider _qualityProvider;
+
   @override
   Dot dot;
 
   @override
-  IconData iconData = Icons.water_damage;
+  IconData iconData = Icons.fastfood;
 
   @override
   double shortestSide;
 
   @override
-  String title = 'Korozyon Var Mı?';
+  String title = 'Zemin Katta Dükkan Var Mı?';
 
   @override
   bool check() {
-    return (_qualityProvider.corrosion != CorrosionAnswer.INIT) ? true : false;
+    return (_qualityProvider.shop != ShopAnswer.INIT) ? true : false;
   }
 
   @override
@@ -49,14 +50,14 @@ class Pv05Corrosion extends StatelessWidget
                       color: Colors.blue[800],
                       size: 32,
                     ),
-                    color: (_qualityProvider.corrosion == CorrosionAnswer.YES)
+                    color: (_qualityProvider.shop == ShopAnswer.YES)
                         ? Colors.green[200]
                         : Colors.blue[100],
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.0),
                     ),
                     onPressed: () {
-                      _qualityProvider.setCorrosion(CorrosionAnswer.YES);
+                      _qualityProvider.setShop(ShopAnswer.YES);
                       // bittiKontrol();
                     },
                   ),
@@ -70,14 +71,14 @@ class Pv05Corrosion extends StatelessWidget
                       color: Colors.blue[800],
                       size: 32,
                     ),
-                    color: (_qualityProvider.corrosion == CorrosionAnswer.NO)
+                    color: (_qualityProvider.shop == ShopAnswer.NO)
                         ? Colors.red[200]
                         : Colors.blue[100],
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.0),
                     ),
                     onPressed: () {
-                      _qualityProvider.setCorrosion(CorrosionAnswer.NO);
+                      _qualityProvider.setShop(ShopAnswer.NO);
                       // bittiKontrol();
                     },
                   ),

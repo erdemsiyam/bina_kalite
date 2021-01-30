@@ -7,7 +7,9 @@ import 'package:ornek1/ui/page/quality/quality_page/page_views/enum/DotEnum.dart
 import 'package:ornek1/ui/utils/Responsive.dart';
 import 'package:provider/provider.dart';
 
-class Pv01Location extends StatelessWidget with Responsive implements IPageView {
+class Pv01Location extends StatelessWidget
+    with Responsive
+    implements IPageViewSelection {
   QualityProvider _qualityProvider;
   @override
   IconData iconData = Icons.location_on;
@@ -46,6 +48,7 @@ class Pv01Location extends StatelessWidget with Responsive implements IPageView 
   @override
   bool check() {
     return (_qualityProvider.location != null) ? true : false;
+    // TODO : dot ları burada verebilirsin
   }
 
   List<Widget> girilmediState(BuildContext context) {
