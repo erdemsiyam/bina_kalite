@@ -1,14 +1,14 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
-import 'package:location/location.dart';
 import "dart:convert";
 import 'package:numberpicker/numberpicker.dart';
 import 'package:ornek1/provider/quality_provider.dart';
-import 'package:ornek1/ui/page/quality/location_pick_page/location_pick_page.dart';
 import 'package:ornek1/ui/page/quality/quality_page/page_views/abstract/IPageView.dart';
-import 'package:ornek1/ui/page/quality/quality_page/page_views/pv_01_konum.dart';
+import 'package:ornek1/ui/page/quality/quality_page/page_views/pv_01_location.dart';
+import 'package:ornek1/ui/page/quality/quality_page/page_views/pv_02_age.dart';
+import 'package:ornek1/ui/page/quality/quality_page/page_views/pv_03_floors.dart';
+import 'package:ornek1/ui/page/quality/quality_page/page_views/pv_04_height.dart';
 import 'package:provider/provider.dart';
 
 class QualityPage extends StatefulWidget {
@@ -26,12 +26,12 @@ class _QualityPage extends State<QualityPage> {
   List<Widget> _slidePages = [];
   List<bool> _pageHatalar = List<bool>.generate(9, (i) => true);
   final PageController _pageController = PageController(initialPage: 0);
-  KonumState _konumState = KonumState.Girilmedi;
-  LatLng _konum = null;
-  int _binaYasi = 0;
-  int _katSayisi = 1;
-  int _binaYuksekligi = 10;
-  int _korozyonVarMi = 0;
+  // KonumState _konumState = KonumState.Girilmedi;
+  // LatLng _konum = null;
+  // int _binaYasi = 0;
+  // int _katSayisi = 1;
+  // int _binaYuksekligi = 10;
+  // int _korozyonVarMi = 0;
   int _binaOturumAlani = 100;
   int _zemindeMagazaVarMi = 0;
   int _binaBitisikNizamMi = 0;
@@ -43,11 +43,6 @@ class _QualityPage extends State<QualityPage> {
   void initState() {
     super.initState();
     // OLD
-    _slidePages.add(_page1());
-    _slidePages.add(_page2());
-    _slidePages.add(_page3());
-    _slidePages.add(_page4());
-    _slidePages.add(_page5());
     _slidePages.add(_page6());
     _slidePages.add(_page7());
     _slidePages.add(_page8());
@@ -68,11 +63,14 @@ class _QualityPage extends State<QualityPage> {
     print('shortestSide :  ' + shortestSide.toString());
     if (_pageViews.length == 0) {
       _pageViews.add(
-        Pv01Konum(
+        Pv01Location(
           shortestSide,
           onLocationComplete: pageView1CompleteAnimate,
         ),
       );
+      _pageViews.add(Pv02Age());
+      _pageViews.add(Pv03Floors());
+      _pageViews.add(Pv04Height());
     }
     return Scaffold(
       body: Container(
@@ -129,13 +127,7 @@ class _QualityPage extends State<QualityPage> {
               // Değişir Kısım (PageView)
               Expanded(
                 child: PageView.builder(
-                  physics: (_qualityProvider.locationState ==
-                              LocationState.NOT_DONE ||
-                          _qualityProvider.locationState ==
-                              LocationState.LOADING ||
-                          _qualityProvider.doneState == DoneState.DONE)
-                      ? NeverScrollableScrollPhysics()
-                      : AlwaysScrollableScrollPhysics(),
+                  physics: _pageViewPhysics(),
                   scrollDirection: Axis.horizontal,
                   controller: _pageController,
                   onPageChanged: (int index) {
@@ -234,424 +226,6 @@ class _QualityPage extends State<QualityPage> {
                     : Colors.grey,
         borderRadius: BorderRadius.all(Radius.circular(12)),
       ),
-    );
-  }
-
-  Widget _page1() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      mainAxisSize: MainAxisSize.max,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        // Logo
-        _logo(Icons.location_on),
-        _baslik('Konum'),
-        // Soru İçeriği
-        Expanded(
-          child: Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: (_konumState == KonumState.Girilmedi)
-                  ? _page1_girilmediState()
-                  : (_konumState == KonumState.Aliniyor)
-                      ? _page1_aliniyorState()
-                      : (_konumState == KonumState.Girildi)
-                          ? _page1_girildiState()
-                          : [],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  List<Widget> _page1_girilmediState() {
-    return [
-      SizedBox(height: 30),
-      Container(
-        margin: EdgeInsets.symmetric(horizontal: 30),
-        child: RaisedButton(
-          padding: EdgeInsets.symmetric(vertical: 20),
-          child: Text(
-            'Şu anki Konumum',
-            style: TextStyle(
-              fontSize: 18,
-              color: Colors.blue[800],
-            ),
-          ),
-          color: Colors.blue[100],
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
-          ),
-          onPressed: () async {
-            setState(() {
-              _konumState = KonumState.Aliniyor;
-            });
-            if (await getLocation()) {
-              setState(() {
-                _konumState = KonumState.Girildi;
-                _pageController.nextPage(
-                  duration: Duration(milliseconds: 800),
-                  curve: Curves.easeIn,
-                );
-              });
-            } else {
-              setState(() {
-                _konumState = KonumState.Girilmedi;
-              });
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text("Konum İzin"),
-                    content: Text("Konum izni verilmeli."),
-                    actions: <Widget>[
-                      FlatButton(
-                        child: Text("Close"),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      )
-                    ],
-                  );
-                },
-              );
-            }
-          },
-        ),
-      ),
-      SizedBox(
-        height: 20,
-      ),
-      Center(
-        child: GestureDetector(
-          child: Text(
-            'Haritadan Seç',
-            style: TextStyle(
-              fontSize: 13,
-              color: Colors.white,
-              decoration: TextDecoration.underline,
-            ),
-          ),
-          onTap: () async {
-            _konum = await Navigator.push<LatLng>(
-              context,
-              MaterialPageRoute(
-                builder: (context) => LocationPickPage(),
-              ),
-            );
-            if (_konum != null) {
-              setState(() {
-                _konumState = KonumState.Girildi;
-                _pageController.nextPage(
-                  duration: Duration(milliseconds: 800),
-                  curve: Curves.easeIn,
-                );
-              });
-            }
-          },
-        ),
-      ),
-    ];
-  }
-
-  List<Widget> _page1_aliniyorState() {
-    return [
-      Center(
-        child: CircularProgressIndicator(
-          backgroundColor: Colors.blue[400],
-        ),
-      )
-    ];
-  }
-
-  List<Widget> _page1_girildiState() {
-    return [
-      SizedBox(height: 10),
-      Center(
-        child: Icon(
-          Icons.done,
-          size: 80,
-          color: Colors.green[200],
-        ),
-      ),
-      SizedBox(
-        height: 30,
-      ),
-      Center(
-        child: IconButton(
-          icon: Icon(Icons.refresh),
-          iconSize: 26,
-          color: Colors.grey[200],
-          onPressed: () {
-            setState(() {
-              _konumState = KonumState.Girilmedi;
-            });
-          },
-        ),
-      ),
-    ];
-  }
-
-  Future<bool> getLocation() async {
-    Location location = new Location();
-
-    bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
-
-    _serviceEnabled = await location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await location.requestService();
-      if (!_serviceEnabled) {
-        return false;
-      }
-    }
-
-    _permissionGranted = await location.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await location.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
-        return false;
-      }
-    }
-    LocationData _locationData = await location.getLocation();
-    _konum = LatLng(_locationData.latitude, _locationData.longitude);
-    return true;
-  }
-
-  Widget _page2() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      mainAxisSize: MainAxisSize.max,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        // Logo
-        _logo(Icons.local_convenience_store),
-        _baslik('Bina Yaşı'),
-        // Soru İçeriği
-        Expanded(
-          child: Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                NumberPicker.integer(
-                  initialValue: _binaYasi,
-                  minValue: 0,
-                  maxValue: 100,
-                  textStyle: TextStyle(
-                    fontSize: 20,
-                    color: Colors.grey[300],
-                  ),
-                  selectedTextStyle: TextStyle(
-                    fontSize: 32,
-                    color: Colors.white,
-                  ),
-                  highlightSelectedValue: true,
-                  onChanged: (numy) {
-                    if (_sonucErisildi) return;
-                    setState(() {
-                      _binaYasi = numy;
-                    });
-                    bittiKontrol();
-                  },
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _page3() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      mainAxisSize: MainAxisSize.max,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        // Logo
-        _logo(Icons.upgrade),
-        _baslik('Kat Sayısı'),
-        // Soru İçeriği
-        Expanded(
-          child: Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                NumberPicker.integer(
-                  initialValue: _katSayisi,
-                  minValue: 1,
-                  maxValue: 100,
-                  textStyle: TextStyle(
-                    fontSize: 20,
-                    color: Colors.grey[300],
-                  ),
-                  selectedTextStyle: TextStyle(
-                    fontSize: 32,
-                    color: Colors.white,
-                  ),
-                  highlightSelectedValue: true,
-                  onChanged: (numy) {
-                    if (_sonucErisildi) return;
-                    setState(() {
-                      _katSayisi = numy;
-                    });
-                    bittiKontrol();
-                  },
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _page4() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      mainAxisSize: MainAxisSize.max,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        // Logo
-        _logo(Icons.format_line_spacing),
-        _baslik('Bina Yüksekliği'),
-        // Soru İçeriği
-        Expanded(
-          child: Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    NumberPicker.integer(
-                      initialValue: _binaYuksekligi,
-                      minValue: 3,
-                      step: 3,
-                      maxValue: 60,
-                      textStyle: TextStyle(
-                        fontSize: 20,
-                        color: Colors.grey[300],
-                      ),
-                      selectedTextStyle: TextStyle(
-                        fontSize: 32,
-                        color: Colors.white,
-                      ),
-                      highlightSelectedValue: true,
-                      onChanged: (numy) {
-                        if (_sonucErisildi) return;
-                        setState(() {
-                          _binaYuksekligi = numy;
-                        });
-                        bittiKontrol();
-                      },
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 50.0),
-                      child: Text(
-                        'm',
-                        style: TextStyle(
-                          fontSize: 22,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _page5() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      mainAxisSize: MainAxisSize.max,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        // Logo
-        _logo(Icons.water_damage),
-        _baslik('Korozyon Var Mı?'),
-        // Soru İçeriği
-        Expanded(
-          child: Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      margin: EdgeInsets.symmetric(horizontal: 20),
-                      child: RaisedButton(
-                        padding: EdgeInsets.symmetric(vertical: 20),
-                        child: Icon(
-                          Icons.done,
-                          color: Colors.blue[800],
-                          size: 32,
-                        ),
-                        color: (_korozyonVarMi == 1)
-                            ? Colors.green[200]
-                            : Colors.blue[100],
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        onPressed: () {
-                          if (_sonucErisildi) return;
-                          setState(() {
-                            _korozyonVarMi = 1;
-                          });
-                          bittiKontrol();
-                        },
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.symmetric(horizontal: 20),
-                      child: RaisedButton(
-                        padding: EdgeInsets.symmetric(vertical: 20),
-                        child: Icon(
-                          Icons.close,
-                          color: Colors.blue[800],
-                          size: 32,
-                        ),
-                        color: (_korozyonVarMi == 2)
-                            ? Colors.green[200]
-                            : Colors.blue[100],
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        onPressed: () {
-                          if (_sonucErisildi) return;
-                          setState(() {
-                            _korozyonVarMi = 2;
-                          });
-                          bittiKontrol();
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
     );
   }
 
@@ -878,21 +452,14 @@ class _QualityPage extends State<QualityPage> {
 
   bool veriKontrol(int nereyeKadarKontrol) {
     bool sonuc = true;
-    if (nereyeKadarKontrol > 0) {
-      if (_konum == null) {
-        _pageHatalar[0] = false;
-        sonuc = false;
-      } else
-        _pageHatalar[0] = true;
-    }
+    // if (nereyeKadarKontrol > 0) {
+    //   if (_konum == null) {
+    //     _pageHatalar[0] = false;
+    //     sonuc = false;
+    //   } else
+    //     _pageHatalar[0] = true;
+    // }
 
-    //if (nereyeKadarKontrol > 3) {
-    //  if (_binaYuksekligi <= 5) {
-    //    _pageHatalar[3] = false;
-    //    sonuc = false;
-    //  } else
-    //    _pageHatalar[3] = true;
-    //}
     if (nereyeKadarKontrol > 4) {
       if (_korozyonVarMi == 0) {
         _pageHatalar[4] = false;
@@ -900,13 +467,6 @@ class _QualityPage extends State<QualityPage> {
       } else
         _pageHatalar[4] = true;
     }
-    //if (nereyeKadarKontrol > 5) {
-    //  if (_binaOturumAlani <= 5) {
-    //    _pageHatalar[5] = false;
-    //    sonuc = false;
-    //  } else
-    //    _pageHatalar[5] = true;
-    //}
     if (nereyeKadarKontrol > 6) {
       if (_zemindeMagazaVarMi == 0) {
         _pageHatalar[6] = false;
@@ -946,11 +506,11 @@ class _QualityPage extends State<QualityPage> {
       _sonucState = SonucState.Getiriliyor;
     });
     final body = {
-      "konum": _konum,
-      "binaYasi": _binaYasi,
-      "katSayisi": _katSayisi,
-      "binaYuksekligi": _binaYuksekligi,
-      "korozyonVarMi": _korozyonVarMi,
+      // "konum": _konum,
+      // "binaYasi": _binaYasi,
+      // "katSayisi": _katSayisi,
+      // "binaYuksekligi": _binaYuksekligi,
+      // "korozyonVarMi": _korozyonVarMi,
       "binaOturumAlani": _binaOturumAlani,
       "zemindeMagazaVarMi": _zemindeMagazaVarMi,
       "binaBitisikNizamMi": _binaBitisikNizamMi
@@ -1164,12 +724,12 @@ class _QualityPage extends State<QualityPage> {
               setState(() {
                 _currentPage = 0;
                 _pageHatalar = List<bool>.generate(9, (i) => true);
-                _konumState = KonumState.Girilmedi;
-                _konum = null;
-                _binaYasi = 0;
-                _katSayisi = 1;
-                _binaYuksekligi = 9;
-                _korozyonVarMi = 0;
+                // _konumState = KonumState.Girilmedi;
+                // _konum = null;
+                // _binaYasi = 0;
+                // _katSayisi = 1;
+                // _binaYuksekligi = 9;
+                // _korozyonVarMi = 0;
                 _binaOturumAlani = 100;
                 _zemindeMagazaVarMi = 0;
                 _binaBitisikNizamMi = 0;
@@ -1186,6 +746,16 @@ class _QualityPage extends State<QualityPage> {
   }
 
   // NEW
+  ScrollPhysics _pageViewPhysics() {
+    if (_qualityProvider.locationState == LocationState.INIT ||
+        _qualityProvider.locationState == LocationState.LOADING ||
+        _qualityProvider.doneState == DoneState.DONE) {
+      return NeverScrollableScrollPhysics();
+    } else {
+      return AlwaysScrollableScrollPhysics();
+    }
+  }
+
   void pageView1CompleteAnimate() {
     _pageController.nextPage(
       duration: Duration(milliseconds: 800),

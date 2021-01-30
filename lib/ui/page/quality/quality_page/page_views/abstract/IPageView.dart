@@ -6,4 +6,5 @@ abstract class IPageView implements IResponsive {
   IconData iconData;
   String title;
   Dot dot;
+  bool check();
 }
