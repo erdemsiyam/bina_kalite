@@ -1,6 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:ornek1/service/model/quality_request_model.dart';
+import 'package:ornek1/service/model/quality_response_model.dart';
+import 'package:ornek1/service/web_service.dart';
+import 'package:ornek1/ui/page/quality/quality_page/page_views/abstract/IPageView.dart';
+import 'package:ornek1/ui/page/quality/quality_page/page_views/enum/DotEnum.dart';
 
 enum LocationState { INIT, LOADING, DONE }
 enum DeviceLocationResultState {
@@ -13,26 +20,35 @@ enum ManuelLocationResultState { INIT, DONE }
 enum CorrosionAnswer { INIT, YES, NO }
 enum ShopAnswer { INIT, YES, NO }
 enum ContiguousAnswer { INIT, YES, NO }
-enum DoneState { INIT, LOADING, DONE }
+enum DoneState { INIT, LOADING, FAIL, DONE }
+enum ResultAnswer { INIT, LOW_RISK, MEDIUM_RISK, HIGH_RISK, VERY_HIGH_RISK }
 
 class QualityProvider with ChangeNotifier {
   /* STATES */
-  LocationState locationState = LocationState.INIT;
-  DeviceLocationResultState deviceLocationResultState =
-      DeviceLocationResultState.INIT;
-  ManuelLocationResultState manuelLocationResultState =
-      ManuelLocationResultState.INIT;
-  DoneState doneState = DoneState.INIT;
+  LocationState locationState;
+  DeviceLocationResultState deviceLocationResultState;
+  ManuelLocationResultState manuelLocationResultState;
+  DoneState doneState;
 
   /* PROPERTIES */
-  LatLng location;
-  int age;
-  int floors;
-  int height;
-  CorrosionAnswer corrosion;
-  int area;
-  ShopAnswer shop;
-  ContiguousAnswer contiguous;
+  LatLng location; // konum
+  int age; // bina yaşı
+  int floors; // kat sayısı
+  int height; // bina yüksekliği
+  CorrosionAnswer corrosion; // korozyon var mı
+  int area; // oturum alanı
+  ShopAnswer shop; // zemin katta dükkan var mı
+  ContiguousAnswer contiguous; // bitişik nizam mı
+  // Results
+  String resultText;
+  ResultAnswer result;
+  // Paging
+  // int maxProgress;
+  // int currentProgress;
+
+  QualityProvider() {
+    reset();
+  }
 
   Future<DeviceLocationResultState> getLocationFromDevice() async {
     Location locationService = new Location();
@@ -127,6 +143,57 @@ class QualityProvider with ChangeNotifier {
 
   void setContiguous(ContiguousAnswer answer) {
     contiguous = answer;
+    notifyListeners();
+  }
+
+  void reset() {
+    locationState = LocationState.INIT;
+    deviceLocationResultState = DeviceLocationResultState.INIT;
+    manuelLocationResultState = ManuelLocationResultState.INIT;
+    doneState = DoneState.INIT;
+    location = null;
+    age = 0;
+    floors = 1;
+    height = 9;
+    corrosion = CorrosionAnswer.INIT;
+    area = 100;
+    shop = ShopAnswer.INIT;
+    contiguous = ContiguousAnswer.INIT;
+    resultText = null;
+    result = ResultAnswer.INIT;
+    // maxProgress = 0;
+    // currentProgress = 0;
+  }
+
+  void checkAll(List<IPageView> pageViews) {
+    for (IPageViewSelection pv
+        in pageViews.where((x) => x is IPageViewSelection)) {
+      if (pv.dot != Dot.DONE) return;
+    }
+    _getResult();
+  }
+
+  void _getResult() async {
+    doneState = DoneState.LOADING;
+    notifyListeners();
+
+    QualityRequestModel reqModel = QualityRequestModel(
+      location: location,
+      age: age,
+      floors: floors,
+      height: height,
+      corrosion: corrosion,
+      area: area,
+      shop: shop,
+      contiguous: contiguous,
+    );
+    QualityResponseModel resModel = await WebService().getQuality(reqModel);
+
+    if (resModel.httpCode == 200) {
+      doneState = DoneState.LOADING;
+    } else {
+      doneState = DoneState.FAIL;
+    }
     notifyListeners();
   }
 }

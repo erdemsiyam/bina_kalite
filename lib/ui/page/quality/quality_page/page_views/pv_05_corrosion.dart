@@ -23,7 +23,13 @@ class Pv05Corrosion extends StatelessWidget
 
   @override
   bool check() {
-    return (_qualityProvider.corrosion != CorrosionAnswer.INIT) ? true : false;
+    if (_qualityProvider.corrosion != CorrosionAnswer.INIT) {
+      dot = Dot.DONE;
+      return true;
+    } else {
+      dot = Dot.NOT_DONE;
+      return false;
+    }
   }
 
   @override

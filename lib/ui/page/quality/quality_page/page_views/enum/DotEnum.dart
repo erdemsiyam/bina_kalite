@@ -1,1 +1,1 @@
-enum Dot { NotDone, Done, Wrong }
+enum Dot { INIT, NOT_DONE, DONE }

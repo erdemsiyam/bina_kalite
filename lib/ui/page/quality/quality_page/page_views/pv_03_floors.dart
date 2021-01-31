@@ -24,6 +24,7 @@ class Pv03Floors extends StatelessWidget
 
   @override
   bool check() {
+    dot = Dot.DONE;
     return true;
   }
 

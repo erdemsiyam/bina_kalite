@@ -47,8 +47,13 @@ class Pv01Location extends StatelessWidget
 
   @override
   bool check() {
-    return (_qualityProvider.location != null) ? true : false;
-    // TODO : dot ları burada verebilirsin
+    if (_qualityProvider.location != null) {
+      dot = Dot.DONE;
+      return true;
+    } else {
+      dot = Dot.NOT_DONE;
+      return false;
+    }
   }
 
   List<Widget> girilmediState(BuildContext context) {

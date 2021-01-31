@@ -10,6 +10,10 @@ class Pv09Result extends StatelessWidget with Responsive implements IPageView {
   @override
   double shortestSide;
 
+  final void Function() onRestart;
+
+  Pv09Result({@required this.onRestart});
+
   @override
   Widget build(BuildContext context) {
     _qualityProvider = Provider.of<QualityProvider>(context);
@@ -18,6 +22,8 @@ class Pv09Result extends StatelessWidget with Responsive implements IPageView {
         return loading();
       case DoneState.DONE:
         return done();
+      case DoneState.FAIL:
+        return fail();
       case DoneState.INIT:
         return Container();
       default:
@@ -25,7 +31,6 @@ class Pv09Result extends StatelessWidget with Responsive implements IPageView {
     }
   }
 
-  // TODO : Buradayız
   Widget loading() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -59,7 +64,7 @@ class Pv09Result extends StatelessWidget with Responsive implements IPageView {
             child: Column(
               children: [
                 Text(
-                  _sonucYazi,
+                  _qualityProvider.resultText,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 26,
@@ -86,130 +91,14 @@ class Pv09Result extends StatelessWidget with Responsive implements IPageView {
           ),
         ),
         SizedBox(height: 10),
-        Row(
-          children: [
-            Container(
-              height: 40,
-              width: (_sonucRiskSeviye == 1) ? 350 : 50,
-              decoration: BoxDecoration(
-                color: Colors.green[400],
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(10),
-                  bottomRight: Radius.circular(10),
-                ),
-              ),
-              child: (_sonucRiskSeviye == 1)
-                  ? Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Text(
-                          "Düşük Risk",
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                          ),
-                        ),
-                        SizedBox(width: 10),
-                      ],
-                    )
-                  : Container(),
-            ),
-          ],
-        ),
-        Row(
-          children: [
-            Container(
-              height: 40,
-              width: (_sonucRiskSeviye == 2) ? 350 : 50,
-              decoration: BoxDecoration(
-                color: Colors.yellow,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(10),
-                  bottomRight: Radius.circular(10),
-                ),
-              ),
-              child: (_sonucRiskSeviye == 2)
-                  ? Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Text(
-                          "Orta Risk",
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
-                          ),
-                        ),
-                        SizedBox(width: 10),
-                      ],
-                    )
-                  : Container(),
-            ),
-          ],
-        ),
-        Row(
-          children: [
-            Container(
-              height: 40,
-              width: (_sonucRiskSeviye == 3) ? 350 : 50,
-              decoration: BoxDecoration(
-                color: Colors.orange,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(10),
-                  bottomRight: Radius.circular(10),
-                ),
-              ),
-              child: (_sonucRiskSeviye == 3)
-                  ? Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Text(
-                          "Yüksek Risk",
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                          ),
-                        ),
-                        SizedBox(width: 10),
-                      ],
-                    )
-                  : Container(),
-            ),
-          ],
-        ),
-        Row(
-          children: [
-            Container(
-              height: 40,
-              width: (_sonucRiskSeviye == 4) ? 350 : 50,
-              decoration: BoxDecoration(
-                color: Colors.red,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(10),
-                  bottomRight: Radius.circular(10),
-                ),
-              ),
-              child: (_sonucRiskSeviye == 4)
-                  ? Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Text(
-                          "Çok Yüksek Risk",
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                          ),
-                        ),
-                        SizedBox(width: 10),
-                      ],
-                    )
-                  : Container(),
-            ),
-          ],
-        ),
+        _riskLevel("Düşük Risk", Colors.green[400],
+            _qualityProvider.result == ResultAnswer.LOW_RISK),
+        _riskLevel("Orta Risk", Colors.yellow,
+            _qualityProvider.result == ResultAnswer.MEDIUM_RISK),
+        _riskLevel("Yüksek Risk", Colors.orange,
+            _qualityProvider.result == ResultAnswer.HIGH_RISK),
+        _riskLevel("Çok Yüksek Risk", Colors.red,
+            _qualityProvider.result == ResultAnswer.VERY_HIGH_RISK),
         SizedBox(height: 10),
         IconButton(
           icon: Icon(
@@ -218,24 +107,26 @@ class Pv09Result extends StatelessWidget with Responsive implements IPageView {
             color: Colors.white,
           ),
           onPressed: () {
-            setState(() {
-              _currentPage = 0;
-              _pageHatalar = List<bool>.generate(9, (i) => true);
-              // _konumState = KonumState.Girilmedi;
-              // _konum = null;
-              // _binaYasi = 0;
-              // _katSayisi = 1;
-              // _binaYuksekligi = 9;
-              // _korozyonVarMi = 0;
-              // _binaOturumAlani = 100;
-              // _zemindeMagazaVarMi = 0;
-              // _binaBitisikNizamMi = 0;
-              _sonucErisildi = false;
-              _sonucState = SonucState.Bos;
-              _sonucRiskSeviye = 0;
-              _sonucYazi = "";
-              _pageController.jumpToPage(0);
-            });
+            _qualityProvider.reset();
+            onRestart.call();
+            // setState(() {
+            //   _currentPage = 0;
+            //   _pageHatalar = List<bool>.generate(9, (i) => true);
+            // _konumState = KonumState.Girilmedi;
+            // _konum = null;
+            // _binaYasi = 0;
+            // _katSayisi = 1;
+            // _binaYuksekligi = 9;
+            // _korozyonVarMi = 0;
+            // _binaOturumAlani = 100;
+            // _zemindeMagazaVarMi = 0;
+            // _binaBitisikNizamMi = 0;
+            //   _sonucErisildi = false;
+            //   _sonucState = SonucState.Bos;
+            //   _sonucRiskSeviye = 0;
+            //   _sonucYazi = "";
+            //   _pageController.jumpToPage(0);
+            // });
           },
         ),
       ],
@@ -254,5 +145,44 @@ class Pv09Result extends StatelessWidget with Responsive implements IPageView {
         ),
       ),
     );
+  }
+
+  Widget _riskLevel(String text, Color color, bool selected) {
+    return Row(
+      children: [
+        Container(
+          height: 40,
+          width: (selected) ? 350 : 50,
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(10),
+              bottomRight: Radius.circular(10),
+            ),
+          ),
+          child: (selected)
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Text(
+                      text,
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                  ],
+                )
+              : Container(),
+        ),
+      ],
+    );
+  }
+
+  Widget fail() {
+    // TODO : 9.sayfa http fail durumunda
+    return Container();
   }
 }

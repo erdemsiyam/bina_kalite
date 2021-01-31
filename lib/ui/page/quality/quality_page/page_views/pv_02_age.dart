@@ -28,6 +28,7 @@ class Pv02Age extends StatelessWidget
 
   @override
   bool check() {
+    dot = Dot.DONE;
     return true;
   }
 

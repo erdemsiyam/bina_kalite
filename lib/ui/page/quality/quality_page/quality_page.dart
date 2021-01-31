@@ -1,9 +1,7 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import "dart:convert";
 import 'package:ornek1/provider/quality_provider.dart';
 import 'package:ornek1/ui/page/quality/quality_page/page_views/abstract/IPageView.dart';
+import 'package:ornek1/ui/page/quality/quality_page/page_views/enum/DotEnum.dart';
 import 'package:ornek1/ui/page/quality/quality_page/page_views/pv_01_location.dart';
 import 'package:ornek1/ui/page/quality/quality_page/page_views/pv_02_age.dart';
 import 'package:ornek1/ui/page/quality/quality_page/page_views/pv_03_floors.dart';
@@ -12,6 +10,7 @@ import 'package:ornek1/ui/page/quality/quality_page/page_views/pv_05_corrosion.d
 import 'package:ornek1/ui/page/quality/quality_page/page_views/pv_06_area.dart';
 import 'package:ornek1/ui/page/quality/quality_page/page_views/pv_07_shop.dart';
 import 'package:ornek1/ui/page/quality/quality_page/page_views/pv_08_contiguous.dart';
+import 'package:ornek1/ui/page/quality/quality_page/page_views/pv_09_result.dart';
 import 'package:provider/provider.dart';
 
 class QualityPage extends StatefulWidget {
@@ -68,6 +67,9 @@ class _QualityPage extends State<QualityPage> {
       _pageViews.add(Pv06Area());
       _pageViews.add(Pv07Shop());
       _pageViews.add(Pv08Contiguous());
+      _pageViews.add(Pv09Result(
+        onRestart: () => _pageController.jumpToPage(0),
+      ));
     }
     return Scaffold(
       body: Container(
@@ -133,19 +135,15 @@ class _QualityPage extends State<QualityPage> {
                   scrollDirection: Axis.horizontal,
                   controller: _pageController,
                   onPageChanged: (int index) {
-                    veriKontrol(index); // TODO
-                    // TODO son sorudaysa, sonuc sayfasına gitme
-                    if (_qualityProvider.doneState != DoneState.DONE &&
-                        index == 8 &&
-                        _currentPage == 7) {
-                      _pageController.previousPage(
-                          duration: Duration(milliseconds: 300),
-                          curve: Curves.ease);
-                      return;
-                    }
-                    setState(() {
-                      _currentPage = index;
-                    });
+                    _qualityProvider.checkAll(_pageViews);
+                    // if (_qualityProvider.doneState != DoneState.DONE &&
+                    //     index == 8 &&
+                    //     _currentPage == 7) {
+                    //   _pageController.previousPage(
+                    //       duration: Duration(milliseconds: 300),
+                    //       curve: Curves.ease);
+                    //   return;
+                    // }
                   },
                   itemCount: _pageViews.length,
                   itemBuilder: (ctx, i) => _pageViews[i] as Widget,
@@ -159,41 +157,28 @@ class _QualityPage extends State<QualityPage> {
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          for (int i = 0; i < _slidePages.length - 1; i++)
-                            if (i > _currentPage)
-                              _slideDot(2)
-                            else if (i == _currentPage)
-                              _slideDot(1)
-                            else if (!_pageHatalar[i])
-                              _slideDot(3)
-                            else if (i < _currentPage)
-                              _slideDot(0)
+                          for (IPageViewSelection pv in _pageViews
+                              .where((x) => x is IPageViewSelection))
+                            _dot(pv.dot),
                         ],
+
+                        // <Widget>[
+                        //   for (int i = 0; i < _slidePages.length - 1; i++)
+                        //     if (i > _currentPage)
+                        //       _slideDot(2)
+                        //     else if (i == _currentPage)
+                        //       _slideDot(1)
+                        //     else if (!_pageHatalar[i])
+                        //       _slideDot(3)
+                        //     else if (i < _currentPage)
+                        //       _slideDot(0)
+                        // ],
                       ),
                     )
                   : Container(),
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _slideDot(int type) {
-    return AnimatedContainer(
-      duration: Duration(milliseconds: 150),
-      margin: const EdgeInsets.symmetric(horizontal: 10),
-      height: (type == 2) ? 8 : 12,
-      width: (type == 2) ? 8 : 12,
-      decoration: BoxDecoration(
-        color: (type == 0)
-            ? Colors.green[200]
-            : (type == 1)
-                ? Colors.blue[800]
-                : (type == 3)
-                    ? Colors.red
-                    : Colors.grey,
-        borderRadius: BorderRadius.all(Radius.circular(12)),
       ),
     );
   }
@@ -232,51 +217,22 @@ class _QualityPage extends State<QualityPage> {
     return sonuc;
   }
 
-  bittiKontrol() async {
-    if (!veriKontrol(8)) return;
+  // bittiKontrol() async {
+  //   if (!veriKontrol(8)) return;
 
-    _sonucErisildi = true;
-    // 9.(sonuç) sayfasına kadar sayfa ileri ittirilir
-    int duration = (_currentPage == 7) ? 600 : 200;
-    while (_currentPage <= 8) {
-      await _pageController.nextPage(
-        duration: Duration(milliseconds: duration),
-        curve: Curves.easeIn,
-      );
-      _currentPage++;
-    }
+  //   _sonucErisildi = true;
+  //   // 9.(sonuç) sayfasına kadar sayfa ileri ittirilir
+  //   int duration = (_currentPage == 7) ? 600 : 200;
+  //   while (_currentPage <= 8) {
+  //     await _pageController.nextPage(
+  //       duration: Duration(milliseconds: duration),
+  //       curve: Curves.easeIn,
+  //     );
+  //     _currentPage++;
+  //   }
 
-    await sonucGetir();
-  }
-
-  void sonucGetir() async {
-    setState(() {
-      _sonucState = SonucState.Getiriliyor;
-    });
-    final body = {
-      // "konum": _konum,
-      // "binaYasi": _binaYasi,
-      // "katSayisi": _katSayisi,
-      // "binaYuksekligi": _binaYuksekligi,
-      // "korozyonVarMi": _korozyonVarMi,
-      // "binaOturumAlani": _binaOturumAlani,
-      // "zemindeMagazaVarMi": _zemindeMagazaVarMi,
-      // "binaBitisikNizamMi": _binaBitisikNizamMi
-    };
-    final jsonString = json.encode(body);
-    final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
-    await http
-        .post('http://10.0.2.2:8000/', headers: headers, body: jsonString)
-        .then((value) {
-      Map<String, dynamic> resp = json.decode(value.body);
-      _sonucRiskSeviye = int.parse(resp['sonucRiskSeviye'].toString());
-      _sonucYazi = resp['sonucYazi'].toString();
-      var x = 1;
-    });
-    setState(() {
-      _sonucState = SonucState.Getirildi;
-    });
-  }
+  //   await sonucGetir();
+  // }
 
   // NEW
   ScrollPhysics _pageViewPhysics() {
@@ -295,7 +251,23 @@ class _QualityPage extends State<QualityPage> {
       curve: Curves.easeIn,
     );
   }
-}
 
-enum KonumState { Girilmedi, Aliniyor, Girildi }
-enum SonucState { Bos, Getiriliyor, Getirildi }
+  Widget _dot(Dot dot) {
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 150),
+      margin: const EdgeInsets.symmetric(horizontal: 10),
+      height: 8, //(type == 2) ? 8 : 12,
+      width: 8, //(type == 2) ? 8 : 12,
+      decoration: BoxDecoration(
+        color: (dot == Dot.DONE)
+            ? Colors.green[200]
+            : (dot == Dot.INIT)
+                ? Colors.blue[800]
+                : (dot == Dot.NOT_DONE)
+                    ? Colors.red
+                    : Colors.grey,
+        borderRadius: BorderRadius.all(Radius.circular(12)),
+      ),
+    );
+  }
+}

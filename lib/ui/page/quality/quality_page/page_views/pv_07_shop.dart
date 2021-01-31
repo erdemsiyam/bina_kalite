@@ -24,7 +24,13 @@ class Pv07Shop extends StatelessWidget
 
   @override
   bool check() {
-    return (_qualityProvider.shop != ShopAnswer.INIT) ? true : false;
+    if (_qualityProvider.shop != ShopAnswer.INIT) {
+      dot = Dot.DONE;
+      return true;
+    } else {
+      dot = Dot.NOT_DONE;
+      return false;
+    }
   }
 
   @override

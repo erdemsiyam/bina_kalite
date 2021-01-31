@@ -24,6 +24,7 @@ class Pv06Area extends StatelessWidget
 
   @override
   bool check() {
+    dot = Dot.DONE;
     return true;
   }
 

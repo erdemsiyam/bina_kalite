@@ -7,6 +7,6 @@ abstract class IPageView implements IResponsive {}
 abstract class IPageViewSelection implements IPageView {
   IconData iconData;
   String title;
-  Dot dot;
+  Dot dot = Dot.INIT;
   bool check();
 }

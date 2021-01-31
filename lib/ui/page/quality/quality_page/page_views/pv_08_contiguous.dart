@@ -23,9 +23,13 @@ class Pv08Contiguous extends StatelessWidget
 
   @override
   bool check() {
-    return (_qualityProvider.contiguous != ContiguousAnswer.INIT)
-        ? true
-        : false;
+    if (_qualityProvider.contiguous != ContiguousAnswer.INIT) {
+      dot = Dot.DONE;
+      return true;
+    } else {
+      dot = Dot.NOT_DONE;
+      return false;
+    }
   }
 
   @override

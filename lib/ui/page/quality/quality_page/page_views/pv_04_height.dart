@@ -24,6 +24,7 @@ class Pv04Height extends StatelessWidget
 
   @override
   bool check() {
+    dot = Dot.DONE;
     return true;
   }
 
