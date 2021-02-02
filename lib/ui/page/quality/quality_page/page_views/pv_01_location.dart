@@ -4,6 +4,8 @@ import 'package:ornek1/provider/quality_provider.dart';
 import 'package:ornek1/ui/page/quality/location_pick_page/location_pick_page.dart';
 import 'package:ornek1/ui/page/quality/quality_page/page_views/abstract/IPageView.dart';
 import 'package:ornek1/ui/page/quality/quality_page/page_views/enum/DotEnum.dart';
+import 'package:ornek1/ui/page/quality/quality_page/page_views/widget/icon_part_widget.dart';
+import 'package:ornek1/ui/page/quality/quality_page/page_views/widget/title_part_widget.dart';
 import 'package:ornek1/ui/utils/Responsive.dart';
 import 'package:provider/provider.dart';
 
@@ -20,28 +22,30 @@ class Pv01Location extends StatelessWidget
   @override
   double shortestSide;
 
-  final Widget Function() onLocationComplete;
+  final void Function() onLocationComplete;
 
   Pv01Location(this.shortestSide, {@required this.onLocationComplete});
   @override
   Widget build(BuildContext context) {
-    _qualityProvider = Provider.of<QualityProvider>(context);
+    _qualityProvider = context.watch<QualityProvider>();
+    _qualityProvider.setIcon(iconData);
+    _qualityProvider.setTitle(title);
     deviceType = shortestSide;
-    return Expanded(
-      child: Container(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: (_qualityProvider.locationState == LocationState.INIT)
-              ? girilmediState(context)
-              : (_qualityProvider.locationState == LocationState.LOADING)
-                  ? aliniyorState()
-                  : (_qualityProvider.locationState == LocationState.DONE)
-                      ? girildiState()
-                      : [],
-        ),
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        SizedBox(height: 30),
+        IconPartWidget(iconData: iconData),
+        TitlePartWidget(title: title),
+        ...(_qualityProvider.locationState == LocationState.INIT)
+            ? girilmediState(context)
+            : (_qualityProvider.locationState == LocationState.LOADING)
+                ? aliniyorState()
+                : (_qualityProvider.locationState == LocationState.DONE)
+                    ? girildiState()
+                    : [],
+      ],
     );
   }
 
@@ -107,7 +111,7 @@ class Pv01Location extends StatelessWidget
             ),
           ),
           onTap: () async {
-            await _qualityProvider.getLocationFromMap(
+            _qualityProvider.getLocationFromMap(
               await Navigator.push<LatLng>(
                 context,
                 MaterialPageRoute(

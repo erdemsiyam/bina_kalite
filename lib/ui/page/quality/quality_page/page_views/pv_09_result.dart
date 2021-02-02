@@ -16,7 +16,8 @@ class Pv09Result extends StatelessWidget with Responsive implements IPageView {
 
   @override
   Widget build(BuildContext context) {
-    _qualityProvider = Provider.of<QualityProvider>(context);
+    _qualityProvider = context
+        .watch<QualityProvider>(); // Provider.of<QualityProvider>(context);
     switch (_qualityProvider.doneState) {
       case DoneState.LOADING:
         return loading();

@@ -8,9 +8,16 @@ import 'package:ornek1/ui/page/quality/quality_page/quality_page.dart';
 import 'package:ornek1/ui/constants/constant.dart';
 import 'package:provider/provider.dart';
 
-main() => runApp(DevicePreview(
-      builder: (context) => MyApp(),
-    ));
+main() => runApp(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => QualityProvider()),
+        ],
+        child: DevicePreview(
+          builder: (context) => MyApp(),
+        ),
+      ),
+    );
 
 class MyApp extends StatelessWidget {
   @override
@@ -20,11 +27,7 @@ class MyApp extends StatelessWidget {
       builder: DevicePreview.appBuilder,
       theme: lightTheme,
       debugShowCheckedModeBanner: false,
-      // Quality Sayfası
-      home: ChangeNotifierProvider<QualityProvider>(
-        create: (context) => QualityProvider(),
-        child: LoginPage(),
-      ),
+      home: QualityPage(),
     );
   }
 }

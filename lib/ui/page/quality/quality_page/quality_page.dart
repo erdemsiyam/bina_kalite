@@ -25,22 +25,8 @@ class _QualityPage extends State<QualityPage> {
   QualityProvider _qualityProvider;
   // OLDY
   int _currentPage = 0;
-  List<Widget> _slidePages = [];
-  List<bool> _pageHatalar = List<bool>.generate(9, (i) => true);
   final PageController _pageController = PageController(initialPage: 0);
-  // KonumState _konumState = KonumState.Girilmedi;
-  // LatLng _konum = null;
-  // int _binaYasi = 0;
-  // int _katSayisi = 1;
-  // int _binaYuksekligi = 10;
-  // int _korozyonVarMi = 0;
-  // int _binaOturumAlani = 100;
-  // int _zemindeMagazaVarMi = 0;
-  // int _binaBitisikNizamMi = 0;
-  // bool _sonucErisildi = false;
-  // SonucState _sonucState = SonucState.Bos;
-  // int _sonucRiskSeviye = 0;
-  // String _sonucYazi = '';
+
   @override
   void dispose() {
     super.dispose();
@@ -50,7 +36,8 @@ class _QualityPage extends State<QualityPage> {
   @override
   Widget build(BuildContext context) {
     // New
-    _qualityProvider = Provider.of<QualityProvider>(context);
+    _qualityProvider = context
+        .watch<QualityProvider>(); //Provider.of<QualityProvider>(context);
     shortestSide = MediaQuery.of(context).size.shortestSide;
     print('shortestSide :  ' + shortestSide.toString());
     if (_pageViews.length == 0) {
@@ -89,46 +76,10 @@ class _QualityPage extends State<QualityPage> {
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              // Sabit değişir Kısım
-              // Icon
-              (_pageViews[_currentPage] is IPageViewSelection)
-                  ? Container(
-                      height: 240,
-                      alignment: Alignment.center,
-                      child: Container(
-                        padding: EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          color: Colors.white30,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          (_pageViews[_currentPage] as IPageViewSelection)
-                              .iconData,
-                          size: 100,
-                          color: Colors.blue,
-                        ),
-                      ),
-                    )
-                  : Container(),
-              // Başlık
-              (_pageViews[_currentPage] is IPageViewSelection)
-                  ? Container(
-                      alignment: Alignment.center,
-                      height: 60,
-                      child: Text(
-                        (_pageViews[_currentPage] as IPageViewSelection).title,
-                        style: TextStyle(
-                          fontSize: 26,
-                          color: Colors.blue[900],
-                        ),
-                      ),
-                    )
-                  : Container(),
-              // Değişir Kısım (PageView)
+              // (PageView)
               Expanded(
                 child: PageView.builder(
                   physics: _pageViewPhysics(),

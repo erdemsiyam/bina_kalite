@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
@@ -42,9 +40,9 @@ class QualityProvider with ChangeNotifier {
   // Results
   String resultText;
   ResultAnswer result;
-  // Paging
-  // int maxProgress;
-  // int currentProgress;
+  // Common Parts
+  String title;
+  IconData iconData;
 
   QualityProvider() {
     reset();
@@ -90,16 +88,18 @@ class QualityProvider with ChangeNotifier {
     return deviceLocationResultState;
   }
 
-  Future<ManuelLocationResultState> getLocationFromMap(LatLng latLng) {
+  ManuelLocationResultState getLocationFromMap(LatLng latLng) {
     if (latLng != null) {
       location = latLng;
       locationState = LocationState.DONE;
       manuelLocationResultState = ManuelLocationResultState.DONE;
       notifyListeners();
+      return manuelLocationResultState;
     } else {
       locationState = LocationState.INIT;
       manuelLocationResultState = ManuelLocationResultState.INIT;
       notifyListeners();
+      return manuelLocationResultState;
     }
   }
 
@@ -168,7 +168,10 @@ class QualityProvider with ChangeNotifier {
   void checkAll(List<IPageView> pageViews) {
     for (IPageViewSelection pv
         in pageViews.where((x) => x is IPageViewSelection)) {
-      if (pv.dot != Dot.DONE) return;
+      if (pv.dot != Dot.DONE) {
+        notifyListeners();
+        return;
+      }
     }
     _getResult();
   }
@@ -194,6 +197,17 @@ class QualityProvider with ChangeNotifier {
     } else {
       doneState = DoneState.FAIL;
     }
+    notifyListeners();
+  }
+
+  // Common UI Changes
+  setIcon(IconData iconData) {
+    this.iconData = iconData;
+    notifyListeners();
+  }
+
+  setTitle(String title) {
+    this.title = title;
     notifyListeners();
   }
 }

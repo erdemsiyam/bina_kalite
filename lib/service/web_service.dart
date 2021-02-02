@@ -21,16 +21,20 @@ class WebService {
   // Methods
   Future<QualityResponseModel> getQuality(QualityRequestModel reqModel) async {
     QualityResponseModel resModel;
-    final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
-    await http
-        .post(
-      url,
-      headers: headers,
-      body: reqModel.toJsonString(),
-    )
-        .then((value) {
-      resModel = QualityResponseModel.fromJsonString(value.body);
-    });
+    // Real Response
+    // final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
+    // await http
+    //     .post(
+    //   url,
+    //   headers: headers,
+    //   body: reqModel.toJsonString(),
+    // )
+    //     .then((value) {
+    //   resModel = QualityResponseModel.fromJsonString(value.body);
+    // });
+    // Fake Response
+    resModel = QualityResponseModel.fromJsonString(
+        "{\"httpCode\":\"200\",\"Şu kadar ağırlık düşüyor\",\"result\":3}");
     return resModel;
   }
 }
