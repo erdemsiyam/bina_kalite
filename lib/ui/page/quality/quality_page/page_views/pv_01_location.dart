@@ -18,7 +18,7 @@ class Pv01Location extends StatelessWidget
   @override
   String title = 'Konum';
   @override
-  Dot dot;
+  Dot dot = Dot.INIT;
   @override
   double shortestSide;
 
@@ -51,13 +51,14 @@ class Pv01Location extends StatelessWidget
 
   @override
   bool check() {
-    if (_qualityProvider.location != null) {
-      dot = Dot.DONE;
-      return true;
-    } else {
-      dot = Dot.NOT_DONE;
-      return false;
-    }
+    return _qualityProvider.location != null;
+    // if (_qualityProvider.location != null) {
+    //   dot = Dot.DONE;
+    //   return true;
+    // } else {
+    //   dot = Dot.NOT_DONE;
+    //   return false;
+    // }
   }
 
   List<Widget> girilmediState(BuildContext context) {

@@ -13,7 +13,7 @@ class Pv04Height extends StatelessWidget
     implements IPageViewSelection {
   QualityProvider _qualityProvider;
   @override
-  Dot dot;
+  Dot dot = Dot.INIT;
 
   @override
   IconData iconData = Icons.format_line_spacing;
@@ -26,7 +26,7 @@ class Pv04Height extends StatelessWidget
 
   @override
   bool check() {
-    dot = Dot.DONE;
+    // dot = Dot.DONE;
     return true;
   }
 
@@ -52,7 +52,7 @@ class Pv04Height extends StatelessWidget
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             NumberPicker.integer(
-              initialValue: _qualityProvider.height ??initValue,
+              initialValue: _qualityProvider.height ?? initValue,
               minValue: minValue,
               step: stepValue,
               maxValue: maxValue,

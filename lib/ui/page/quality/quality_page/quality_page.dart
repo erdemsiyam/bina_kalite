@@ -86,7 +86,11 @@ class _QualityPage extends State<QualityPage> {
                   scrollDirection: Axis.horizontal,
                   controller: _pageController,
                   onPageChanged: (int index) {
-                    _qualityProvider.checkAll(_pageViews);
+                    _qualityProvider.checkAll(
+                      _pageViews,
+                      index,
+                      selectionCompleteAnimate,
+                    );
                     // if (_qualityProvider.doneState != DoneState.DONE &&
                     //     index == 8 &&
                     //     _currentPage == 7) {
@@ -189,6 +193,8 @@ class _QualityPage extends State<QualityPage> {
   ScrollPhysics _pageViewPhysics() {
     if (_qualityProvider.locationState == LocationState.INIT ||
         _qualityProvider.locationState == LocationState.LOADING ||
+        _qualityProvider.doneState == DoneState.LOADING ||
+        _qualityProvider.doneState == DoneState.FAIL ||
         _qualityProvider.doneState == DoneState.DONE) {
       return NeverScrollableScrollPhysics();
     } else {
@@ -203,7 +209,19 @@ class _QualityPage extends State<QualityPage> {
     );
   }
 
+  void selectionCompleteAnimate(int pageIndex) async {
+    int duration = (pageIndex == 8) ? 600 : 200;
+    while (pageIndex <= 9) {
+      await _pageController.nextPage(
+        duration: Duration(milliseconds: duration),
+        curve: Curves.easeIn,
+      );
+      pageIndex++;
+    }
+  }
+
   Widget _dot(Dot dot) {
+    print('dsdsd');
     return AnimatedContainer(
       duration: Duration(milliseconds: 150),
       margin: const EdgeInsets.symmetric(horizontal: 10),

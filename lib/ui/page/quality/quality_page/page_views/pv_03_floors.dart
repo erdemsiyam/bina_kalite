@@ -13,7 +13,7 @@ class Pv03Floors extends StatelessWidget
     implements IPageViewSelection {
   QualityProvider _qualityProvider;
   @override
-  Dot dot;
+  Dot dot = Dot.INIT;
 
   @override
   IconData iconData = Icons.upgrade;
@@ -26,7 +26,7 @@ class Pv03Floors extends StatelessWidget
 
   @override
   bool check() {
-    dot = Dot.DONE;
+    // dot = Dot.DONE;
     return true;
   }
 
@@ -47,7 +47,7 @@ class Pv03Floors extends StatelessWidget
         IconPartWidget(iconData: iconData),
         TitlePartWidget(title: title),
         NumberPicker.integer(
-          initialValue: _qualityProvider.floors ??initValue,
+          initialValue: _qualityProvider.floors ?? initValue,
           minValue: minValue,
           maxValue: maxValue,
           textStyle: TextStyle(

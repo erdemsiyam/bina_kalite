@@ -13,7 +13,7 @@ class Pv07Shop extends StatelessWidget
   QualityProvider _qualityProvider;
 
   @override
-  Dot dot;
+  Dot dot = Dot.INIT;
 
   @override
   IconData iconData = Icons.fastfood;
@@ -26,13 +26,14 @@ class Pv07Shop extends StatelessWidget
 
   @override
   bool check() {
-    if (_qualityProvider.shop != ShopAnswer.INIT) {
-      dot = Dot.DONE;
-      return true;
-    } else {
-      dot = Dot.NOT_DONE;
-      return false;
-    }
+    return _qualityProvider.shop != ShopAnswer.INIT;
+    // if (_qualityProvider.shop != ShopAnswer.INIT) {
+    //   dot = Dot.DONE;
+    //   return true;
+    // } else {
+    //   dot = Dot.NOT_DONE;
+    //   return false;
+    // }
   }
 
   @override

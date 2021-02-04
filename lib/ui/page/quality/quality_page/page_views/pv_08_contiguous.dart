@@ -12,7 +12,7 @@ class Pv08Contiguous extends StatelessWidget
     implements IPageViewSelection {
   QualityProvider _qualityProvider;
   @override
-  Dot dot;
+  Dot dot = Dot.INIT;
 
   @override
   IconData iconData = Icons.location_city;
@@ -25,13 +25,14 @@ class Pv08Contiguous extends StatelessWidget
 
   @override
   bool check() {
-    if (_qualityProvider.contiguous != ContiguousAnswer.INIT) {
-      dot = Dot.DONE;
-      return true;
-    } else {
-      dot = Dot.NOT_DONE;
-      return false;
-    }
+    return _qualityProvider.contiguous != ContiguousAnswer.INIT;
+    // if (_qualityProvider.contiguous != ContiguousAnswer.INIT) {
+    //   dot = Dot.DONE;
+    //   return true;
+    // } else {
+    //   dot = Dot.NOT_DONE;
+    //   return false;
+    // }
   }
 
   @override

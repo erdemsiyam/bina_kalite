@@ -13,7 +13,7 @@ class Pv02Age extends StatelessWidget
     implements IPageViewSelection {
   QualityProvider _qualityProvider;
   @override
-  Dot dot;
+  Dot dot = Dot.INIT;
 
   @override
   IconData iconData = Icons.local_convenience_store;
@@ -30,7 +30,7 @@ class Pv02Age extends StatelessWidget
 
   @override
   bool check() {
-    dot = Dot.DONE;
+    // dot = Dot.DONE;
     return true;
   }
 

@@ -12,7 +12,7 @@ class Pv05Corrosion extends StatelessWidget
     implements IPageViewSelection {
   QualityProvider _qualityProvider;
   @override
-  Dot dot;
+  Dot dot = Dot.INIT;
 
   @override
   IconData iconData = Icons.water_damage;
@@ -25,13 +25,14 @@ class Pv05Corrosion extends StatelessWidget
 
   @override
   bool check() {
-    if (_qualityProvider.corrosion != CorrosionAnswer.INIT) {
-      dot = Dot.DONE;
-      return true;
-    } else {
-      dot = Dot.NOT_DONE;
-      return false;
-    }
+    return _qualityProvider.corrosion != CorrosionAnswer.INIT;
+    // if (_qualityProvider.corrosion != CorrosionAnswer.INIT) {
+    //   dot = Dot.DONE;
+    //   return true;
+    // } else {
+    //   dot = Dot.NOT_DONE;
+    //   return false;
+    // }
   }
 
   @override

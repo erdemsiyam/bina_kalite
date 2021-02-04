@@ -165,14 +165,42 @@ class QualityProvider with ChangeNotifier {
     // currentProgress = 0;
   }
 
-  void checkAll(List<IPageView> pageViews) {
-    for (IPageViewSelection pv
-        in pageViews.where((x) => x is IPageViewSelection)) {
-      if (pv.dot != Dot.DONE) {
+  void checkAll(
+    List<IPageView> pageViews,
+    int index,
+    Function onSelectionComplete,
+  ) {
+    List<IPageView> pvList =
+        pageViews.where((x) => x is IPageViewSelection).toList();
+    int loc_index = 0;
+    for (IPageViewSelection pv in pvList) {
+      if (++loc_index > index && loc_index < pvList.length) {
+        return;
+      }
+      if (pv.check() && pv.dot != Dot.DONE) {
+        pv.dot = Dot.DONE;
+        notifyListeners();
+        continue;
+      } else if (!pv.check() && pv.dot != Dot.NOT_DONE) {
+        pv.dot = Dot.NOT_DONE;
+        notifyListeners();
+        continue;
+      }
+      if (pv.dot == Dot.INIT) {
         notifyListeners();
         return;
       }
     }
+    // for (IPageViewSelection pv
+    //     in pageViews.where((x) => x is IPageViewSelection)) {
+    //   if (pv.dot != Dot.DONE) {
+    //     notifyListeners();
+    //     return;
+    //   }
+    // }
+
+    // TODO : sayfayı 9.sayfaya götür
+    onSelectionComplete(loc_index).call();
     _getResult();
   }
 

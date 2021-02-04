@@ -13,7 +13,7 @@ class Pv06Area extends StatelessWidget
     implements IPageViewSelection {
   QualityProvider _qualityProvider;
   @override
-  Dot dot;
+  Dot dot = Dot.INIT;
 
   @override
   IconData iconData = Icons.my_location;
@@ -26,7 +26,7 @@ class Pv06Area extends StatelessWidget
 
   @override
   bool check() {
-    dot = Dot.DONE;
+    // dot = Dot.DONE;
     return true;
   }
 
