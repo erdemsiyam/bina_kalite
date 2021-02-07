@@ -21,6 +21,7 @@ class WebService {
   // Methods
   Future<QualityResponseModel> getQuality(QualityRequestModel reqModel) async {
     QualityResponseModel resModel;
+
     // Real Response
     // final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
     // await http
@@ -32,9 +33,12 @@ class WebService {
     //     .then((value) {
     //   resModel = QualityResponseModel.fromJsonString(value.body);
     // });
+
     // Fake Response
     resModel = QualityResponseModel.fromJsonString(
-        "{\"httpCode\":\"200\",\"Şu kadar ağırlık düşüyor\",\"result\":3}");
+        '{"httpCode":200,"resultText":"Şu kadar ağırlık düşüyor","result":3}');
+    await Future.delayed(Duration(seconds: 2));
+
     return resModel;
   }
 }

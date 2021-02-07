@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ornek1/provider/quality_provider.dart';
 import 'package:ornek1/ui/page/quality/quality_page/page_views/abstract/IPageView.dart';
-import 'package:ornek1/ui/page/quality/quality_page/page_views/enum/DotEnum.dart';
+import 'package:ornek1/ui/page/quality/quality_page/page_views/enum/enums.dart';
 import 'package:ornek1/ui/page/quality/quality_page/page_views/pv_01_location.dart';
 import 'package:ornek1/ui/page/quality/quality_page/page_views/pv_02_age.dart';
 import 'package:ornek1/ui/page/quality/quality_page/page_views/pv_03_floors.dart';
@@ -24,7 +24,6 @@ class _QualityPage extends State<QualityPage> {
   List<IPageView> _pageViews = [];
   QualityProvider _qualityProvider;
   // OLDY
-  int _currentPage = 0;
   final PageController _pageController = PageController(initialPage: 0);
 
   @override
@@ -54,9 +53,7 @@ class _QualityPage extends State<QualityPage> {
       _pageViews.add(Pv06Area());
       _pageViews.add(Pv07Shop());
       _pageViews.add(Pv08Contiguous());
-      _pageViews.add(Pv09Result(
-        onRestart: () => _pageController.jumpToPage(0),
-      ));
+      _qualityProvider.pageViews = _pageViews;
     }
     return Scaffold(
       body: Container(
@@ -81,28 +78,39 @@ class _QualityPage extends State<QualityPage> {
             children: <Widget>[
               // (PageView)
               Expanded(
-                child: PageView.builder(
-                  physics: _pageViewPhysics(),
-                  scrollDirection: Axis.horizontal,
-                  controller: _pageController,
-                  onPageChanged: (int index) {
-                    _qualityProvider.checkAll(
-                      _pageViews,
-                      index,
-                      selectionCompleteAnimate,
-                    );
-                    // if (_qualityProvider.doneState != DoneState.DONE &&
-                    //     index == 8 &&
-                    //     _currentPage == 7) {
-                    //   _pageController.previousPage(
-                    //       duration: Duration(milliseconds: 300),
-                    //       curve: Curves.ease);
-                    //   return;
-                    // }
-                  },
-                  itemCount: _pageViews.length,
-                  itemBuilder: (ctx, i) => _pageViews[i] as Widget,
-                ),
+                child: (_qualityProvider.doneState == DoneState.INIT)
+                    ? PageView.builder(
+                        physics: _pageViewPhysics(),
+                        scrollDirection: Axis.horizontal,
+                        controller: _pageController,
+                        onPageChanged: (int index) {
+                          // _pageViews[_currentPvIndex].seenState =
+                          //     SeenState.SEEN;
+                          _qualityProvider.setSeen(index);
+                          // _pageViews[_currentPvIndex].seenState = SeenState.NOW;
+                          // TODO : şöyle yapılabilir  setSeen(old_i,new_i)
+
+                          // _currentPage = index;
+                          // _qualityProvider.checkAll(
+                          //   _pageViews,
+                          //   index,
+                          //   selectionCompleteAnimate,
+                          // );
+                          // if (_qualityProvider.doneState != DoneState.DONE &&
+                          //     index == 8 &&
+                          //     _currentPage == 7) {
+                          //   _pageController.previousPage(
+                          //       duration: Duration(milliseconds: 300),
+                          //       curve: Curves.ease);
+                          //   return;
+                          // }
+                        },
+                        itemCount: _pageViews.length,
+                        itemBuilder: (ctx, i) => _pageViews[i] as Widget,
+                      )
+                    : Pv09Result(
+                        onRestart: () => _pageController.jumpToPage(0),
+                      ),
               ),
               // Noktalar Kısım
               (_qualityProvider.doneState != DoneState.DONE)
@@ -112,9 +120,7 @@ class _QualityPage extends State<QualityPage> {
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          for (IPageViewSelection pv in _pageViews
-                              .where((x) => x is IPageViewSelection))
-                            _dot(pv.dot),
+                          for (IPageView pv in _pageViews) _dot(pv)
                         ],
 
                         // <Widget>[
@@ -210,30 +216,31 @@ class _QualityPage extends State<QualityPage> {
   }
 
   void selectionCompleteAnimate(int pageIndex) async {
-    int duration = (pageIndex == 8) ? 600 : 200;
-    while (pageIndex <= 9) {
-      await _pageController.nextPage(
-        duration: Duration(milliseconds: duration),
-        curve: Curves.easeIn,
-      );
-      pageIndex++;
-    }
+    // int duration = (pageIndex == 8) ? 600 : 200;
+    // while (pageIndex <= 9) {
+    //   await _pageController.nextPage(
+    //     duration: Duration(milliseconds: duration),
+    //     curve: Curves.easeIn,
+    //   );
+    //   pageIndex++;
+    // }
   }
 
-  Widget _dot(Dot dot) {
-    print('dsdsd');
+  Widget _dot(IPageView pv) {
+    // print('dsdsd');
     return AnimatedContainer(
       duration: Duration(milliseconds: 150),
       margin: const EdgeInsets.symmetric(horizontal: 10),
-      height: 8, //(type == 2) ? 8 : 12,
-      width: 8, //(type == 2) ? 8 : 12,
+      height: (pv.seenState == SeenState.NOW) ? 12 : 8, //(type == 2) ? 8 : 12,
+      width: (pv.seenState == SeenState.NOW) ? 12 : 8, //(type == 2) ? 8 : 12,
       decoration: BoxDecoration(
-        color: (dot == Dot.DONE)
+        color: (pv.seenState == SeenState.SEEN && pv.checkAnswer())
             ? Colors.green[200]
-            : (dot == Dot.INIT)
-                ? Colors.blue[800]
-                : (dot == Dot.NOT_DONE)
-                    ? Colors.red
+            : (pv.seenState == SeenState.SEEN)
+                ? Colors.red
+                : (pv.seenState == SeenState.NOT ||
+                        pv.seenState == SeenState.NOW)
+                    ? Colors.blue[800]
                     : Colors.grey,
         borderRadius: BorderRadius.all(Radius.circular(12)),
       ),

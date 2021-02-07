@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:ornek1/provider/quality_provider.dart';
+import 'package:ornek1/ui/page/quality/quality_page/page_views/enum/enums.dart';
 
 class QualityResponseModel {
   int httpCode;
@@ -17,7 +18,7 @@ class QualityResponseModel {
   factory QualityResponseModel._fromMap(Map<String, dynamic> map) {
     if (map == null) return null;
     ResultAnswer resultType;
-    switch (int.parse(map['result'])) {
+    switch (map['result']) {
       case 1:
         resultType = ResultAnswer.LOW_RISK;
         break;

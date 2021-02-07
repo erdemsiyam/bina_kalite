@@ -11,7 +11,10 @@ import 'package:provider/provider.dart';
 main() => runApp(
       MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (_) => QualityProvider()),
+          ChangeNotifierProvider(
+            create: (_) => QualityProvider(),
+            lazy: false,
+          ),
         ],
         child: DevicePreview(
           builder: (context) => MyApp(),

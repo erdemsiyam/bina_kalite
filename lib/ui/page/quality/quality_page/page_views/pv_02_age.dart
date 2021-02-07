@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:ornek1/provider/quality_provider.dart';
 import 'package:ornek1/ui/page/quality/quality_page/page_views/abstract/IPageView.dart';
-import 'package:ornek1/ui/page/quality/quality_page/page_views/enum/DotEnum.dart';
+import 'package:ornek1/ui/page/quality/quality_page/page_views/enum/enums.dart';
 import 'package:ornek1/ui/page/quality/quality_page/page_views/widget/icon_part_widget.dart';
 import 'package:ornek1/ui/page/quality/quality_page/page_views/widget/title_part_widget.dart';
 import 'package:ornek1/ui/utils/Responsive.dart';
@@ -10,10 +10,10 @@ import 'package:provider/provider.dart';
 
 class Pv02Age extends StatelessWidget
     with Responsive
-    implements IPageViewSelection {
+    implements IPageView {
   QualityProvider _qualityProvider;
   @override
-  Dot dot = Dot.INIT;
+  SeenState seenState = SeenState.NOT;
 
   @override
   IconData iconData = Icons.local_convenience_store;
@@ -29,7 +29,7 @@ class Pv02Age extends StatelessWidget
   int maxValue = 100;
 
   @override
-  bool check() {
+  bool checkAnswer() {
     // dot = Dot.DONE;
     return true;
   }

@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:ornek1/provider/quality_provider.dart';
-import 'package:ornek1/ui/page/quality/quality_page/page_views/abstract/IPageView.dart';
+import 'package:ornek1/ui/page/quality/quality_page/page_views/enum/enums.dart';
+import 'package:ornek1/ui/utils/IResponsive.dart';
 import 'package:ornek1/ui/utils/Responsive.dart';
 import 'package:provider/provider.dart';
 
-class Pv09Result extends StatelessWidget with Responsive implements IPageView {
+class Pv09Result extends StatelessWidget
+    with Responsive
+    implements IResponsive {
+  //with Responsive implements IPageView {
   QualityProvider _qualityProvider;
 
   @override
@@ -65,7 +69,7 @@ class Pv09Result extends StatelessWidget with Responsive implements IPageView {
             child: Column(
               children: [
                 Text(
-                  _qualityProvider.resultText,
+                  _qualityProvider.resultText ?? "70.satır",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 26,
@@ -109,7 +113,9 @@ class Pv09Result extends StatelessWidget with Responsive implements IPageView {
           ),
           onPressed: () {
             _qualityProvider.reset();
-            onRestart.call();
+
+            // onRestart.call();
+
             // setState(() {
             //   _currentPage = 0;
             //   _pageHatalar = List<bool>.generate(9, (i) => true);
@@ -139,7 +145,7 @@ class Pv09Result extends StatelessWidget with Responsive implements IPageView {
       alignment: Alignment.center,
       height: 60,
       child: Text(
-        icerik,
+        icerik ?? " 144.satır",
         style: TextStyle(
           fontSize: 26,
           color: Colors.blue[900],
@@ -167,7 +173,7 @@ class Pv09Result extends StatelessWidget with Responsive implements IPageView {
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     Text(
-                      text,
+                      text ?? "174.satır",
                       style: TextStyle(
                         fontSize: 18,
                         color: Colors.white,
