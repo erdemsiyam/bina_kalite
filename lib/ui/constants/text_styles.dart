@@ -138,3 +138,114 @@ TextStyle tsButton1_bigest = TextStyle(
   fontSize: 32,
   color: colorLight,
 );
+// Quality Titles
+TextStyle tsTitle1_350 = TextStyle(
+  fontFamily: 'OpenSans',
+  fontSize: 22,
+  color: Colors.blue[900], // TODO renkler sabit olmalı
+);
+TextStyle tsTitle1_450 = TextStyle(
+  fontFamily: 'OpenSans',
+  fontSize: 28,
+  color: Colors.blue[900],
+);
+TextStyle tsTitle1_550 = TextStyle(
+  fontFamily: 'OpenSans',
+  fontSize: 40,
+  color: Colors.blue[900],
+);
+TextStyle tsTitle1_bigest = TextStyle(
+  fontFamily: 'OpenSans',
+  fontSize: 52,
+  color: Colors.blue[900],
+);
+// Quality Button
+TextStyle tsButton2_350 = TextStyle(
+  fontSize: 14,
+  color: Colors.blue[800],
+);
+TextStyle tsButton2_450 = TextStyle(
+  fontSize: 18,
+  color: Colors.blue[800],
+);
+TextStyle tsButton2_550 = TextStyle(
+  fontSize: 28,
+  color: Colors.blue[800],
+);
+TextStyle tsButton2_bigest = TextStyle(
+  fontSize: 32,
+  color: Colors.blue[800],
+);
+// Quality Text Button
+TextStyle tsTextButton2_350 = TextStyle(
+  fontSize: 14,
+  color: Colors.white,
+  decoration: TextDecoration.underline,
+);
+TextStyle tsTextButton2_450 = TextStyle(
+  fontSize: 18,
+  color: Colors.white,
+  decoration: TextDecoration.underline,
+);
+TextStyle tsTextButton2_550 = TextStyle(
+  fontSize: 24,
+  color: Colors.white,
+  decoration: TextDecoration.underline,
+);
+TextStyle tsTextButton2_bigest = TextStyle(
+  fontSize: 32,
+  color: Colors.white,
+  decoration: TextDecoration.underline,
+);
+// Quality Number Picker Aktif
+TextStyle tsNumberPickerAktif_350 = TextStyle(
+  fontSize: 32,
+  color: Colors.white,
+);
+TextStyle tsNumberPickerAktif_450 = TextStyle(
+  fontSize: 38,
+  color: Colors.white,
+);
+TextStyle tsNumberPickerAktif_550 = TextStyle(
+  fontSize: 46,
+  color: Colors.white,
+);
+TextStyle tsNumberPickerAktif_bigest = TextStyle(
+  fontSize: 56,
+  color: Colors.white,
+);
+// Quality Number Picker Deaktif
+TextStyle tsNumberPickerDeaktif_350 = TextStyle(
+  fontSize: 20,
+  color: Colors.grey[300],
+);
+TextStyle tsNumberPickerDeaktif_450 = TextStyle(
+  fontSize: 25,
+  color: Colors.grey[300],
+);
+TextStyle tsNumberPickerDeaktif_550 = TextStyle(
+  fontSize: 32,
+  color: Colors.grey[300],
+);
+TextStyle tsNumberPickerDeaktif_bigest = TextStyle(
+  fontSize: 46,
+  color: Colors.grey[300],
+);
+//
+TextStyle tsLabel1_350 = TextStyle(
+  fontSize: 18,
+  color: Colors.white,
+);
+TextStyle tsLabel1_450 = TextStyle(
+  fontSize: 22,
+  color: Colors.white,
+);
+TextStyle tsLabel1_550 = TextStyle(
+  fontSize: 32,
+  color: Colors.white,
+);
+TextStyle tsLabel1_bigest = TextStyle(
+  fontSize: 30,
+  color: Colors.white,
+);
+//

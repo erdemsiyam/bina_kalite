@@ -26,75 +26,86 @@ class Pv08Contiguous extends StatelessWidget
   @override
   bool checkAnswer() {
     return _qualityProvider.contiguous != ContiguousAnswer.INIT;
-    // if (_qualityProvider.contiguous != ContiguousAnswer.INIT) {
-    //   dot = Dot.DONE;
-    //   return true;
-    // } else {
-    //   dot = Dot.NOT_DONE;
-    //   return false;
-    // }
   }
 
   @override
   Widget build(BuildContext context) {
-    _qualityProvider = context
-        .watch<QualityProvider>(); //Provider.of<QualityProvider>(context);
+    _qualityProvider = context.watch<QualityProvider>();
     _qualityProvider.setIcon(iconData);
     _qualityProvider.setTitle(title);
+    shortestSide = MediaQuery.of(context).size.shortestSide;
+    deviceType = shortestSide;
     return Column(
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        SizedBox(height: 30),
-        IconPartWidget(iconData: iconData),
-        TitlePartWidget(title: title),
-        Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 20),
-              child: RaisedButton(
-                padding: EdgeInsets.symmetric(vertical: 20),
-                child: Icon(
-                  Icons.done,
-                  color: Colors.blue[800],
-                  size: 32,
+        IconPartWidget(
+          iconData: iconData,
+          shortestSide: shortestSide,
+        ),
+        TitlePartWidget(
+          title: title,
+          shortestSide: shortestSide,
+        ),
+        Expanded(
+          child: Center(
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                  child: RaisedButton(
+                    padding: EdgeInsets.symmetric(
+                      vertical: fit(16, 20, 28, 38),
+                      horizontal: fit(24, 30, 42, 60),
+                    ),
+                    child: Icon(
+                      Icons.done,
+                      color: Colors.blue[800],
+                      size: fit(28, 32, 48, 60),
+                    ),
+                    color: (_qualityProvider.contiguous == ContiguousAnswer.YES)
+                        ? Colors.green[200]
+                        : Colors.blue[100],
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                        fit(14, 20, 30, 36),
+                      ),
+                    ),
+                    onPressed: () {
+                      _qualityProvider.setContiguous(ContiguousAnswer.YES);
+                      // bittiKontrol();
+                    },
+                  ),
                 ),
-                color: (_qualityProvider.contiguous == ContiguousAnswer.YES)
-                    ? Colors.green[200]
-                    : Colors.blue[100],
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0),
+                Container(
+                  child: RaisedButton(
+                    padding: EdgeInsets.symmetric(
+                      vertical: fit(16, 20, 28, 38),
+                      horizontal: fit(24, 30, 42, 60),
+                    ),
+                    child: Icon(
+                      Icons.close,
+                      color: Colors.blue[800],
+                      size: fit(28, 32, 48, 60),
+                    ),
+                    color: (_qualityProvider.contiguous == ContiguousAnswer.NO)
+                        ? Colors.red[200]
+                        : Colors.blue[100],
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                        fit(14, 20, 30, 36),
+                      ),
+                    ),
+                    onPressed: () {
+                      _qualityProvider.setContiguous(ContiguousAnswer.NO);
+                      // bittiKontrol();
+                    },
+                  ),
                 ),
-                onPressed: () {
-                  _qualityProvider.setContiguous(ContiguousAnswer.YES);
-                  // bittiKontrol();
-                },
-              ),
+              ],
             ),
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 20),
-              child: RaisedButton(
-                padding: EdgeInsets.symmetric(vertical: 20),
-                child: Icon(
-                  Icons.close,
-                  color: Colors.blue[800],
-                  size: 32,
-                ),
-                color: (_qualityProvider.contiguous == ContiguousAnswer.NO)
-                    ? Colors.red[200]
-                    : Colors.blue[100],
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-                onPressed: () {
-                  _qualityProvider.setContiguous(ContiguousAnswer.NO);
-                  // bittiKontrol();
-                },
-              ),
-            ),
-          ],
+          ),
         ),
       ],
     );

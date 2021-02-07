@@ -243,12 +243,12 @@ class QualityProvider with ChangeNotifier {
   // Common UI Changes
   setIcon(IconData iconData) {
     this.iconData = iconData;
-    notifyListeners();
+    // notifyListeners();
   }
 
   setTitle(String title) {
     this.title = title;
-    notifyListeners();
+    // notifyListeners();
   }
 
   setSeen(int newIndex) {

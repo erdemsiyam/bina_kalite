@@ -11,6 +11,7 @@ import 'package:ornek1/ui/page/quality/quality_page/page_views/pv_06_area.dart';
 import 'package:ornek1/ui/page/quality/quality_page/page_views/pv_07_shop.dart';
 import 'package:ornek1/ui/page/quality/quality_page/page_views/pv_08_contiguous.dart';
 import 'package:ornek1/ui/page/quality/quality_page/page_views/pv_09_result.dart';
+import 'package:ornek1/ui/utils/Responsive.dart';
 import 'package:provider/provider.dart';
 
 class QualityPage extends StatefulWidget {
@@ -18,7 +19,7 @@ class QualityPage extends StatefulWidget {
   _QualityPage createState() => _QualityPage();
 }
 
-class _QualityPage extends State<QualityPage> {
+class _QualityPage extends State<QualityPage> with Responsive {
   // NEWEST
   double shortestSide;
   List<IPageView> _pageViews = [];
@@ -34,15 +35,14 @@ class _QualityPage extends State<QualityPage> {
 
   @override
   Widget build(BuildContext context) {
-    // New
+    shortestSide = MediaQuery.of(context).size.shortestSide; //320; // TODO
+    deviceType = shortestSide;
+    print('quality ss : ${MediaQuery.of(context).size.shortestSide}');
     _qualityProvider = context
         .watch<QualityProvider>(); //Provider.of<QualityProvider>(context);
-    shortestSide = MediaQuery.of(context).size.shortestSide;
-    print('shortestSide :  ' + shortestSide.toString());
     if (_pageViews.length == 0) {
       _pageViews.add(
         Pv01Location(
-          shortestSide,
           onLocationComplete: pageView1CompleteAnimate,
         ),
       );
@@ -71,11 +71,14 @@ class _QualityPage extends State<QualityPage> {
           ),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: EdgeInsets.all(
+            fit(10, 20, 30, 20),
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
+              SizedBox(height: fit(40, 60, 90, 140)),
               // (PageView)
               Expanded(
                 child: (_qualityProvider.doneState == DoneState.INIT)
@@ -84,26 +87,7 @@ class _QualityPage extends State<QualityPage> {
                         scrollDirection: Axis.horizontal,
                         controller: _pageController,
                         onPageChanged: (int index) {
-                          // _pageViews[_currentPvIndex].seenState =
-                          //     SeenState.SEEN;
                           _qualityProvider.setSeen(index);
-                          // _pageViews[_currentPvIndex].seenState = SeenState.NOW;
-                          // TODO : şöyle yapılabilir  setSeen(old_i,new_i)
-
-                          // _currentPage = index;
-                          // _qualityProvider.checkAll(
-                          //   _pageViews,
-                          //   index,
-                          //   selectionCompleteAnimate,
-                          // );
-                          // if (_qualityProvider.doneState != DoneState.DONE &&
-                          //     index == 8 &&
-                          //     _currentPage == 7) {
-                          //   _pageController.previousPage(
-                          //       duration: Duration(milliseconds: 300),
-                          //       curve: Curves.ease);
-                          //   return;
-                          // }
                         },
                         itemCount: _pageViews.length,
                         itemBuilder: (ctx, i) => _pageViews[i] as Widget,
@@ -122,18 +106,6 @@ class _QualityPage extends State<QualityPage> {
                         children: <Widget>[
                           for (IPageView pv in _pageViews) _dot(pv)
                         ],
-
-                        // <Widget>[
-                        //   for (int i = 0; i < _slidePages.length - 1; i++)
-                        //     if (i > _currentPage)
-                        //       _slideDot(2)
-                        //     else if (i == _currentPage)
-                        //       _slideDot(1)
-                        //     else if (!_pageHatalar[i])
-                        //       _slideDot(3)
-                        //     else if (i < _currentPage)
-                        //       _slideDot(0)
-                        // ],
                       ),
                     )
                   : Container(),
@@ -144,58 +116,6 @@ class _QualityPage extends State<QualityPage> {
     );
   }
 
-  bool veriKontrol(int nereyeKadarKontrol) {
-    bool sonuc = true;
-    // if (nereyeKadarKontrol > 0) {
-    //   if (_konum == null) {
-    //     _pageHatalar[0] = false;
-    //     sonuc = false;
-    //   } else
-    //     _pageHatalar[0] = true;
-    // }
-
-    // if (nereyeKadarKontrol > 4) {
-    //   if (_korozyonVarMi == 0) {
-    //     _pageHatalar[4] = false;
-    //     sonuc = false;
-    //   } else
-    //     _pageHatalar[4] = true;
-    // }
-    // if (nereyeKadarKontrol > 6) {
-    //   if (_zemindeMagazaVarMi == 0) {
-    //     _pageHatalar[6] = false;
-    //     sonuc = false;
-    //   } else
-    //     _pageHatalar[6] = true;
-    // }
-    // if (nereyeKadarKontrol > 7) {
-    //   if (_binaBitisikNizamMi == 0) {
-    //     _pageHatalar[7] = false;
-    //     sonuc = false;
-    //   } else
-    //     _pageHatalar[7] = true;
-    // }
-    return sonuc;
-  }
-
-  // bittiKontrol() async {
-  //   if (!veriKontrol(8)) return;
-
-  //   _sonucErisildi = true;
-  //   // 9.(sonuç) sayfasına kadar sayfa ileri ittirilir
-  //   int duration = (_currentPage == 7) ? 600 : 200;
-  //   while (_currentPage <= 8) {
-  //     await _pageController.nextPage(
-  //       duration: Duration(milliseconds: duration),
-  //       curve: Curves.easeIn,
-  //     );
-  //     _currentPage++;
-  //   }
-
-  //   await sonucGetir();
-  // }
-
-  // NEW
   ScrollPhysics _pageViewPhysics() {
     if (_qualityProvider.locationState == LocationState.INIT ||
         _qualityProvider.locationState == LocationState.LOADING ||
@@ -215,24 +135,18 @@ class _QualityPage extends State<QualityPage> {
     );
   }
 
-  void selectionCompleteAnimate(int pageIndex) async {
-    // int duration = (pageIndex == 8) ? 600 : 200;
-    // while (pageIndex <= 9) {
-    //   await _pageController.nextPage(
-    //     duration: Duration(milliseconds: duration),
-    //     curve: Curves.easeIn,
-    //   );
-    //   pageIndex++;
-    // }
-  }
-
   Widget _dot(IPageView pv) {
-    // print('dsdsd');
     return AnimatedContainer(
       duration: Duration(milliseconds: 150),
-      margin: const EdgeInsets.symmetric(horizontal: 10),
-      height: (pv.seenState == SeenState.NOW) ? 12 : 8, //(type == 2) ? 8 : 12,
-      width: (pv.seenState == SeenState.NOW) ? 12 : 8, //(type == 2) ? 8 : 12,
+      margin: EdgeInsets.symmetric(
+        horizontal: fit(8, 10, 16, 22),
+      ),
+      height: (pv.seenState == SeenState.NOW)
+          ? fit(10, 12, 16, 24)
+          : fit(6, 8, 12, 16),
+      width: (pv.seenState == SeenState.NOW)
+          ? fit(10, 12, 16, 24)
+          : fit(6, 8, 12, 16),
       decoration: BoxDecoration(
         color: (pv.seenState == SeenState.SEEN && pv.checkAnswer())
             ? Colors.green[200]
