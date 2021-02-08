@@ -5,23 +5,20 @@ import 'package:ornek1/ui/utils/IResponsive.dart';
 import 'package:ornek1/ui/utils/Responsive.dart';
 import 'package:provider/provider.dart';
 
-class Pv09Result extends StatelessWidget
+class ResultPage extends StatelessWidget
     with Responsive
     implements IResponsive {
-  //with Responsive implements IPageView {
   QualityProvider _qualityProvider;
 
   @override
   double shortestSide;
 
-  final void Function() onRestart;
-
-  Pv09Result({@required this.onRestart});
-
   @override
   Widget build(BuildContext context) {
-    _qualityProvider = context
-        .watch<QualityProvider>(); // Provider.of<QualityProvider>(context);
+    shortestSide = MediaQuery.of(context).size.shortestSide; //320; // TODO
+    deviceType = shortestSide;
+    _qualityProvider = context.watch<QualityProvider>();
+    return done();
     switch (_qualityProvider.doneState) {
       case DoneState.LOADING:
         return loading();
@@ -45,8 +42,8 @@ class Pv09Result extends StatelessWidget
         _baslik('İşleniyor...'),
         Center(
           child: SizedBox(
-            width: 100,
-            height: 100,
+            width: fit(70, 100, 140, 180),
+            height: fit(70, 100, 140, 180),
             child: CircularProgressIndicator(
               backgroundColor: Colors.blue[400],
             ),
@@ -58,36 +55,49 @@ class Pv09Result extends StatelessWidget
 
   Widget done() {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        SizedBox(height: 40),
         Center(
           child: Padding(
-            padding: const EdgeInsets.only(left: 40, right: 40),
+            padding: EdgeInsets.symmetric(
+              horizontal: fit(20, 30, 20, 70),
+            ),
             child: Column(
               children: [
                 Text(
-                  _qualityProvider.resultText ?? "70.satır",
+                  _qualityProvider.resultText +
+                          _qualityProvider.resultText +
+                          _qualityProvider.resultText +
+                          _qualityProvider.resultText ??
+                      "70.satır",
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 26,
+                    fontSize: fit(20, 26, 36, 44),
                     color: Colors.blue[900],
                   ),
                 ),
-                SizedBox(height: 20),
+                SizedBox(
+                  height: fit(10, 20, 30, 40),
+                ),
                 RaisedButton(
                   color: Colors.blue[100],
+                  padding: EdgeInsets.symmetric(
+                    vertical: fit(5, 10, 15, 20),
+                    horizontal: fit(10, 20, 30, 40),
+                  ),
                   child: Text(
                     'Detay Göster',
                     style: TextStyle(
                       color: Colors.blue[800],
-                      fontSize: 18,
+                      fontSize: fit(14, 18, 26, 32),
                     ),
                   ),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0),
+                    borderRadius: BorderRadius.circular(
+                      fit(12, 20, 28, 36),
+                    ),
                   ),
                   onPressed: () {},
                 ),
@@ -95,7 +105,6 @@ class Pv09Result extends StatelessWidget
             ),
           ),
         ),
-        SizedBox(height: 10),
         _riskLevel("Düşük Risk", Colors.green[400],
             _qualityProvider.result == ResultAnswer.LOW_RISK),
         _riskLevel("Orta Risk", Colors.yellow,
@@ -104,36 +113,20 @@ class Pv09Result extends StatelessWidget
             _qualityProvider.result == ResultAnswer.HIGH_RISK),
         _riskLevel("Çok Yüksek Risk", Colors.red,
             _qualityProvider.result == ResultAnswer.VERY_HIGH_RISK),
-        SizedBox(height: 10),
+        SizedBox(
+          height: fit(5, 10, 20, 30),
+        ),
         IconButton(
+          padding: EdgeInsets.only(
+            bottom: fit(15, 25, 40, 60),
+          ),
           icon: Icon(
             Icons.refresh,
-            size: 40,
+            size: fit(25, 40, 50, 60),
             color: Colors.white,
           ),
           onPressed: () {
             _qualityProvider.reset();
-
-            // onRestart.call();
-
-            // setState(() {
-            //   _currentPage = 0;
-            //   _pageHatalar = List<bool>.generate(9, (i) => true);
-            // _konumState = KonumState.Girilmedi;
-            // _konum = null;
-            // _binaYasi = 0;
-            // _katSayisi = 1;
-            // _binaYuksekligi = 9;
-            // _korozyonVarMi = 0;
-            // _binaOturumAlani = 100;
-            // _zemindeMagazaVarMi = 0;
-            // _binaBitisikNizamMi = 0;
-            //   _sonucErisildi = false;
-            //   _sonucState = SonucState.Bos;
-            //   _sonucRiskSeviye = 0;
-            //   _sonucYazi = "";
-            //   _pageController.jumpToPage(0);
-            // });
           },
         ),
       ],
@@ -147,7 +140,7 @@ class Pv09Result extends StatelessWidget
       child: Text(
         icerik ?? " 144.satır",
         style: TextStyle(
-          fontSize: 26,
+          fontSize: fit(22, 26, 36, 44),
           color: Colors.blue[900],
         ),
       ),
@@ -155,36 +148,50 @@ class Pv09Result extends StatelessWidget
   }
 
   Widget _riskLevel(String text, Color color, bool selected) {
-    return Row(
-      children: [
-        Container(
-          height: 40,
-          width: (selected) ? 350 : 50,
-          decoration: BoxDecoration(
-            color: color,
-            borderRadius: BorderRadius.only(
-              topRight: Radius.circular(10),
-              bottomRight: Radius.circular(10),
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: fit(10, 10, 10, 10),
+      ),
+      child: Row(
+        children: [
+          Container(
+            height: fit(30, 40, 60, 70),
+            width: (selected) ? fit(270, 300, 400, 540) : fit(30, 40, 60, 80),
+            decoration: BoxDecoration(
+              color: color,
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(
+                  fit(10, 14, 18, 22),
+                ),
+                bottomRight: Radius.circular(
+                  fit(10, 14, 18, 22),
+                ),
+              ),
             ),
-          ),
-          child: (selected)
-              ? Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Text(
-                      text ?? "174.satır",
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
+            child: (selected)
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(
+                          right: fit(2, 6, 12, 16),
+                        ),
+                        child: Text(
+                          text ?? "174.satır",
+                          style: TextStyle(
+                            fontSize: fit(14, 18, 26, 32),
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 10),
-                  ],
-                )
-              : Container(),
-        ),
-      ],
+                      SizedBox(width: 10),
+                    ],
+                  )
+                : Container(),
+          ),
+        ],
+      ),
     );
   }
 

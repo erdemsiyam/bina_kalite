@@ -92,9 +92,7 @@ class _QualityPage extends State<QualityPage> with Responsive {
                         itemCount: _pageViews.length,
                         itemBuilder: (ctx, i) => _pageViews[i] as Widget,
                       )
-                    : Pv09Result(
-                        onRestart: () => _pageController.jumpToPage(0),
-                      ),
+                    : ResultPage(),
               ),
               // Noktalar Kısım
               (_qualityProvider.doneState != DoneState.DONE)
