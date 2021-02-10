@@ -248,4 +248,71 @@ TextStyle tsLabel1_bigest = TextStyle(
   fontSize: 30,
   color: Colors.white,
 );
-//
+// Result Titles
+TextStyle tsTitle2_350 = TextStyle(
+  fontSize: 20,
+  color: Colors.blue[900],
+);
+TextStyle tsTitle2_450 = TextStyle(
+  fontSize: 26,
+  color: Colors.blue[900],
+);
+TextStyle tsTitle2_550 = TextStyle(
+  fontSize: 36,
+  color: Colors.blue[900],
+);
+TextStyle tsTitle2_bigest = TextStyle(
+  fontSize: 44,
+  color: Colors.blue[900],
+);
+// Result Detay Buton
+TextStyle tsTextButton3_350 = TextStyle(
+  color: Colors.blue[800],
+  fontSize: 14,
+);
+TextStyle tsTextButton3_450 = TextStyle(
+  color: Colors.blue[800],
+  fontSize: 18,
+);
+TextStyle tsTextButton3_550 = TextStyle(
+  color: Colors.blue[800],
+  fontSize: 26,
+);
+TextStyle tsTextButton3_bigest = TextStyle(
+  color: Colors.blue[800],
+  fontSize: 32,
+);
+//  Loading Label
+TextStyle tsLabel2_350 = TextStyle(
+  fontSize: 22,
+  color: Colors.blue[900],
+);
+TextStyle tsLabel2_450 = TextStyle(
+  fontSize: 26,
+  color: Colors.blue[900],
+);
+TextStyle tsLabel2_550 = TextStyle(
+  fontSize: 36,
+  color: Colors.blue[900],
+);
+TextStyle tsLabel2_bigest = TextStyle(
+  fontSize: 44,
+  color: Colors.blue[900],
+);
+// Risk label
+TextStyle tsLabel3_350 = TextStyle(
+  fontSize: 14,
+  color: Colors.white,
+);
+TextStyle tsLabel3_450 = TextStyle(
+  fontSize: 18,
+  color: Colors.white,
+);
+TextStyle tsLabel3_550 = TextStyle(
+  fontSize: 26,
+  color: Colors.white,
+);
+TextStyle tsLabel3_bigest = TextStyle(
+  fontSize: 32,
+  color: Colors.white,
+);

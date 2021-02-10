@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ornek1/provider/quality_provider.dart';
+import 'package:ornek1/ui/constants/text_styles.dart';
 import 'package:ornek1/ui/page/quality/quality_page/page_views/enum/enums.dart';
 import 'package:ornek1/ui/utils/IResponsive.dart';
 import 'package:ornek1/ui/utils/Responsive.dart';
@@ -13,12 +14,13 @@ class ResultPage extends StatelessWidget
   @override
   double shortestSide;
 
+  String loadingText = "İşleniyor...";
+
   @override
   Widget build(BuildContext context) {
-    shortestSide = MediaQuery.of(context).size.shortestSide; //320; // TODO
+    shortestSide = MediaQuery.of(context).size.shortestSide;
     deviceType = shortestSide;
     _qualityProvider = context.watch<QualityProvider>();
-    return done();
     switch (_qualityProvider.doneState) {
       case DoneState.LOADING:
         return loading();
@@ -39,7 +41,19 @@ class ResultPage extends StatelessWidget
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        _baslik('İşleniyor...'),
+        Container(
+          alignment: Alignment.center,
+          height: 60,
+          child: Text(
+            loadingText,
+            style: fit(
+              tsLabel2_350,
+              tsLabel2_450,
+              tsLabel2_550,
+              tsLabel2_bigest,
+            ),
+          ),
+        ),
         Center(
           child: SizedBox(
             width: fit(70, 100, 140, 180),
@@ -73,9 +87,11 @@ class ResultPage extends StatelessWidget
                           _qualityProvider.resultText ??
                       "70.satır",
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: fit(20, 26, 36, 44),
-                    color: Colors.blue[900],
+                  style: fit(
+                    tsTitle2_350,
+                    tsTitle2_450,
+                    tsTitle2_550,
+                    tsTitle2_bigest,
                   ),
                 ),
                 SizedBox(
@@ -89,9 +105,11 @@ class ResultPage extends StatelessWidget
                   ),
                   child: Text(
                     'Detay Göster',
-                    style: TextStyle(
-                      color: Colors.blue[800],
-                      fontSize: fit(14, 18, 26, 32),
+                    style: fit(
+                      tsTextButton3_350,
+                      tsTextButton3_450,
+                      tsTextButton3_550,
+                      tsTextButton3_bigest,
                     ),
                   ),
                   shape: RoundedRectangleBorder(
@@ -133,20 +151,6 @@ class ResultPage extends StatelessWidget
     );
   }
 
-  Widget _baslik(String icerik) {
-    return Container(
-      alignment: Alignment.center,
-      height: 60,
-      child: Text(
-        icerik ?? " 144.satır",
-        style: TextStyle(
-          fontSize: fit(22, 26, 36, 44),
-          color: Colors.blue[900],
-        ),
-      ),
-    );
-  }
-
   Widget _riskLevel(String text, Color color, bool selected) {
     return Padding(
       padding: EdgeInsets.symmetric(
@@ -179,9 +183,11 @@ class ResultPage extends StatelessWidget
                         ),
                         child: Text(
                           text ?? "174.satır",
-                          style: TextStyle(
-                            fontSize: fit(14, 18, 26, 32),
-                            color: Colors.white,
+                          style: fit(
+                            tsLabel3_350,
+                            tsLabel3_450,
+                            tsLabel3_550,
+                            tsLabel3_bigest,
                           ),
                         ),
                       ),
