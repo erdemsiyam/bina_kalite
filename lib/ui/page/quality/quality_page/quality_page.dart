@@ -10,7 +10,7 @@ import 'package:ornek1/ui/page/quality/quality_page/page_views/pv_05_corrosion.d
 import 'package:ornek1/ui/page/quality/quality_page/page_views/pv_06_area.dart';
 import 'package:ornek1/ui/page/quality/quality_page/page_views/pv_07_shop.dart';
 import 'package:ornek1/ui/page/quality/quality_page/page_views/pv_08_contiguous.dart';
-import 'package:ornek1/ui/page/quality/quality_page/page_views/result_page.dart';
+import 'package:ornek1/ui/page/quality/result_page/result_page.dart';
 import 'package:ornek1/ui/utils/Responsive.dart';
 import 'package:provider/provider.dart';
 
