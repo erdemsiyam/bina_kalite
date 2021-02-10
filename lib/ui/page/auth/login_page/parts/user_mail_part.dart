@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:ornek1/provider/auth_provider.dart';
 import 'package:ornek1/ui/constants/text_styles.dart';
 import 'package:ornek1/ui/utils/Responsive.dart';
+import 'package:provider/provider.dart';
 
 class UserMailPart extends StatefulWidget {
   final double shortestSide;
@@ -10,6 +12,7 @@ class UserMailPart extends StatefulWidget {
 }
 
 class _UserMailPartState extends State<UserMailPart> with Responsive {
+  AuthProvider _authProvider;
   FocusNode _fs1 = FocusNode();
   final String inputHint = 'E-Mail';
   @override
@@ -23,6 +26,7 @@ class _UserMailPartState extends State<UserMailPart> with Responsive {
   @override
   Widget build(BuildContext context) {
     deviceType = widget.shortestSide;
+    _authProvider = context.watch<AuthProvider>();
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: fit(30, 40, 60, 80),
@@ -32,6 +36,9 @@ class _UserMailPartState extends State<UserMailPart> with Responsive {
         child: TextFormField(
           cursorHeight: fit(15, 20, 25, 25),
           focusNode: _fs1,
+          onChanged: (val) {
+            _authProvider.username = val;
+          },
           style: (_fs1.hasFocus)
               ? fit(
                   tsInputAktif_350,

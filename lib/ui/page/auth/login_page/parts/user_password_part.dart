@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:ornek1/provider/auth_provider.dart';
 import 'package:ornek1/ui/constants/text_styles.dart';
 import 'package:ornek1/ui/utils/Responsive.dart';
+import 'package:provider/provider.dart';
 
 class UserPasswordPart extends StatefulWidget {
   final double shortestSide;
@@ -10,6 +12,7 @@ class UserPasswordPart extends StatefulWidget {
 }
 
 class _UserPasswordPart extends State<UserPasswordPart> with Responsive {
+  AuthProvider _authProvider;
   FocusNode _fs1 = FocusNode();
   bool _isPasswordHide = true;
   final String inputHint = 'Password';
@@ -24,6 +27,7 @@ class _UserPasswordPart extends State<UserPasswordPart> with Responsive {
   @override
   Widget build(BuildContext context) {
     deviceType = widget.shortestSide;
+    _authProvider = context.watch<AuthProvider>();
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: fit(30, 40, 60, 80),
@@ -33,6 +37,9 @@ class _UserPasswordPart extends State<UserPasswordPart> with Responsive {
         child: TextFormField(
           cursorHeight: fit(15, 20, 25, 25),
           focusNode: _fs1,
+          onChanged: (val) {
+            _authProvider.password = val;
+          },
           style: (_fs1.hasFocus)
               ? fit(
                   tsInputAktif_350,

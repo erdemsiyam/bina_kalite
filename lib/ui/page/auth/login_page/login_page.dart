@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:ornek1/ui/page/auth/login_page/enum/enums.dart';
+import 'package:ornek1/ui/page/quality/quality_page/quality_page.dart';
+import 'package:provider/provider.dart';
+import 'package:ornek1/provider/auth_provider.dart';
 import 'package:ornek1/ui/page/auth/login_page/parts/forgot_password_part.dart';
 import 'package:ornek1/ui/page/auth/login_page/parts/login_button_part.dart';
 import 'package:ornek1/ui/page/auth/login_page/parts/preface_part.dart';
@@ -16,11 +19,13 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   double shortestSide;
+  AuthProvider _authProvider;
 
   @override
   Widget build(BuildContext context) {
     shortestSide = MediaQuery.of(context).size.shortestSide;
     print('shortestSide :  ' + shortestSide.toString());
+    _authProvider = context.watch<AuthProvider>();
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
@@ -51,16 +56,54 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(height: shortestSide / 100),
               UserPasswordPart(shortestSide),
               ForgotPasswordPart(shortestSide),
-              SizedBox(height: shortestSide / 50),
-              LoginButtonPart(shortestSide),
-              SizedBox(height: shortestSide / 20),
-              SocialLabelPart(shortestSide),
-              SizedBox(height: shortestSide / 20),
-              SocialLoginButtonsPart(shortestSide),
-              SizedBox(height: shortestSide / 20),
+              ...dynamicPart(),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  List<Widget> dynamicPart() {
+    switch (_authProvider.loginState) {
+      case LoginState.INIT:
+        return loginPart();
+      case LoginState.LOADING:
+        return loadingPart();
+        break;
+      case LoginState.WRONG_PASSWORD:
+        return [Text('Şifre Hatalı')]; // TODO şifre hata
+        break;
+      case LoginState.SERVICE_ERROR:
+        return [Text('Server Hatası')]; // TODO server hata
+        break;
+      case LoginState.DONE:
+        goToQualityPage();
+    }
+    return [Container()];
+  }
+
+  List<Widget> loginPart() {
+    return [
+      SizedBox(height: shortestSide / 50),
+      LoginButtonPart(shortestSide),
+      SizedBox(height: shortestSide / 20),
+      SocialLabelPart(shortestSide),
+      SizedBox(height: shortestSide / 20),
+      SocialLoginButtonsPart(shortestSide),
+      SizedBox(height: shortestSide / 20),
+    ];
+  }
+
+  List<Widget> loadingPart() {
+    return [];
+  }
+
+  void goToQualityPage() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => QualityPage(),
       ),
     );
   }
