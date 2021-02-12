@@ -13,6 +13,8 @@ class AuthProvider with ChangeNotifier {
   String password;
 
   login() async {
+    loginState = LoginState.LOADING;
+    notifyListeners();
     AuthRequestModel reqModel = AuthRequestModel(
       username: username,
       password: password,
@@ -21,8 +23,15 @@ class AuthProvider with ChangeNotifier {
     resModel = await WebService().login(reqModel);
     if (resModel == null) {
       // TODO hataları düzgün handle et
-      loginState = LoginState.SERVICE_ERROR;
+      loginState = LoginState.WRONG_PASSWORD;
+    } else {
+      loginState = LoginState.DONE;
     }
+    notifyListeners();
+  }
+
+  again() {
+    loginState = LoginState.INIT;
     notifyListeners();
   }
 }

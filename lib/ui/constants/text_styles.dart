@@ -316,3 +316,17 @@ TextStyle tsLabel3_bigest = TextStyle(
   fontSize: 32,
   color: Colors.white,
 );
+// Wrong Password label it(16, 20, 24, 38)
+TextStyle tsLabel4_350 = TextStyle(
+  fontSize: 16,
+);
+TextStyle tsLabel4_450 = TextStyle(
+  fontSize: 20,
+);
+TextStyle tsLabel4_550 = TextStyle(
+  fontSize: 24,
+);
+TextStyle tsLabel4_bigest = TextStyle(
+  fontSize: 38,
+);
+

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ornek1/ui/page/auth/login_page/enum/enums.dart';
+import 'package:ornek1/ui/page/auth/login_page/parts/wrong_password_part.dart';
 import 'package:ornek1/ui/page/quality/quality_page/quality_page.dart';
 import 'package:provider/provider.dart';
 import 'package:ornek1/provider/auth_provider.dart';
@@ -55,7 +56,6 @@ class _LoginPageState extends State<LoginPage> {
               UserMailPart(shortestSide),
               SizedBox(height: shortestSide / 100),
               UserPasswordPart(shortestSide),
-              ForgotPasswordPart(shortestSide),
               ...dynamicPart(),
             ],
           ),
@@ -70,13 +70,10 @@ class _LoginPageState extends State<LoginPage> {
         return loginPart();
       case LoginState.LOADING:
         return loadingPart();
-        break;
       case LoginState.WRONG_PASSWORD:
-        return [Text('Şifre Hatalı')]; // TODO şifre hata
-        break;
+        return wrongPasswordPart();
       case LoginState.SERVICE_ERROR:
         return [Text('Server Hatası')]; // TODO server hata
-        break;
       case LoginState.DONE:
         goToQualityPage();
     }
@@ -85,6 +82,7 @@ class _LoginPageState extends State<LoginPage> {
 
   List<Widget> loginPart() {
     return [
+      ForgotPasswordPart(shortestSide),
       SizedBox(height: shortestSide / 50),
       LoginButtonPart(shortestSide),
       SizedBox(height: shortestSide / 20),
@@ -96,15 +94,35 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   List<Widget> loadingPart() {
-    return [];
+    return [
+      SizedBox(height: shortestSide / 10),
+      Center(
+        child: Container(
+          child: CircularProgressIndicator(),
+        ),
+      ),
+    ];
   }
 
   void goToQualityPage() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => QualityPage(),
-      ),
+    Future.delayed(
+      Duration(milliseconds: 200),
+    ).then(
+      (value) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => QualityPage(),
+          ),
+        );
+      },
     );
+  }
+
+  List<Widget> wrongPasswordPart() {
+    return [
+      SizedBox(height: shortestSide / 10),
+      WrongPasswordPart(shortestSide),
+    ];
   }
 }

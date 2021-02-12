@@ -1,11 +1,10 @@
 import 'dart:io';
 
+import 'package:ornek1/model/user_model.dart';
 import 'package:ornek1/service/model/auth_request_model.dart';
 import 'package:ornek1/service/model/auth_response_model.dart';
 import 'package:ornek1/service/model/quality_request_model.dart';
 import 'package:http/http.dart' as http;
-import "dart:convert";
-
 import 'package:ornek1/service/model/quality_response_model.dart';
 
 class WebService {
@@ -16,6 +15,9 @@ class WebService {
     if (_webService == null) _webService = WebService._internal();
     return _webService;
   }
+
+  // Models
+  UserModel userModel;
 
   // Properties
   final String url = "http://10.0.2.2:8000/";
@@ -51,13 +53,25 @@ class WebService {
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
     await http
         .post(
-      url,
+      url2,
       headers: headers,
       body: reqModel.toJson(),
     )
-        .then((value) {
-      resModel = AuthResponseModel.fromJson(value.body);
-    });
+        .then(
+      (value) {
+        resModel = AuthResponseModel.fromJson(value.body);
+      },
+    );
+    if (resModel.access == null || resModel.refresh == null) {
+      return null;
+    }
+
+    userModel = UserModel(
+      username: reqModel.username,
+      password: reqModel.password,
+      access: resModel.access,
+      refresh: resModel.refresh,
+    );
     return resModel;
   }
 }
