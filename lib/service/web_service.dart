@@ -1,5 +1,6 @@
 import 'dart:io';
-
+import 'dart:convert';
+import 'package:http/http.dart';
 import 'package:ornek1/model/user_model.dart';
 import 'package:ornek1/service/model/auth_request_model.dart';
 import 'package:ornek1/service/model/auth_response_model.dart';
@@ -16,34 +17,43 @@ class WebService {
     return _webService;
   }
 
-  // Models
-  UserModel userModel;
-
   // Properties
-  final String url = "http://10.0.2.2:8000/";
-  final String url2 =
-      "http://abdullahcangul2.pythonanywhere.com/auth/api/v1/token/";
+  final String url = "http://abdullahcangul3.pythonanywhere.com";
 
   // Methods
-  Future<QualityResponseModel> getQuality(QualityRequestModel reqModel) async {
+  Future<QualityResponseModel> getQuality(
+    QualityRequestModel reqModel,
+    UserModel userModel,
+  ) async {
     QualityResponseModel resModel;
 
     // Real Response
-    // final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
-    // await http
-    //     .post(
-    //   url,
-    //   headers: headers,
-    //   body: reqModel.toJsonString(),
-    // )
-    //     .then((value) {
-    //   resModel = QualityResponseModel.fromJsonString(value.body);
-    // });
+    final headers = {
+      HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8',
+      HttpHeaders.acceptHeader: 'application/json; charset=UTF-8',
+      HttpHeaders.authorizationHeader: 'Bearer ${userModel.access}',
+    };
+    Response response = await http.post(
+      url + '/quality_check/',
+      headers: headers,
+      body: reqModel.toJsonString(),
+    );
 
-    // Fake Response
-    resModel = QualityResponseModel.fromJsonString(
-        '{"httpCode":200,"resultText":"Şu kadar ağırlık düşüyor","result":3}');
-    await Future.delayed(Duration(seconds: 2));
+    switch (response.statusCode) {
+      case 200:
+        resModel =
+            QualityResponseModel.success(utf8.decode(response.bodyBytes));
+        // gelen body byte ları utf8 için decode edilir
+        break;
+      case 401:
+      case 404:
+        resModel = QualityResponseModel.authExpired();
+        break;
+      case 500:
+        resModel = QualityResponseModel.serviceError();
+        break;
+      default:
+    }
 
     return resModel;
   }
@@ -51,27 +61,25 @@ class WebService {
   Future<AuthResponseModel> login(AuthRequestModel reqModel) async {
     AuthResponseModel resModel;
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
-    await http
-        .post(
-      url2,
+    Response response = await http.post(
+      url + '/auth/token/',
       headers: headers,
       body: reqModel.toJson(),
-    )
-        .then(
-      (value) {
-        resModel = AuthResponseModel.fromJson(value.body);
-      },
     );
-    if (resModel.access == null || resModel.refresh == null) {
-      return null;
+
+    switch (response.statusCode) {
+      case 200:
+        resModel = AuthResponseModel.success(response.body);
+        break;
+      case 401:
+        resModel = AuthResponseModel.wrongPassword();
+        break;
+      case 500:
+        resModel = AuthResponseModel.serviceError();
+        break;
+      default:
     }
 
-    userModel = UserModel(
-      username: reqModel.username,
-      password: reqModel.password,
-      access: resModel.access,
-      refresh: resModel.refresh,
-    );
     return resModel;
   }
 }

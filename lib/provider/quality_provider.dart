@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:ornek1/model/user_model.dart';
 import 'package:ornek1/service/model/quality_request_model.dart';
 import 'package:ornek1/service/model/quality_response_model.dart';
 import 'package:ornek1/service/web_service.dart';
@@ -31,6 +32,9 @@ class QualityProvider with ChangeNotifier {
   String title;
   IconData iconData;
   int _currentPvIndex = 0;
+
+  /* Models */
+  UserModel userModel; // TODO bunun burada olması yanlış, düzeltilmelidir.
 
   QualityProvider() {
     reset();
@@ -228,14 +232,23 @@ class QualityProvider with ChangeNotifier {
       contiguous: contiguous,
     );
     QualityResponseModel resModel;
-    resModel = await WebService().getQuality(reqModel);
+    resModel = await WebService().getQuality(reqModel, userModel);
 
-    if (resModel.httpCode == 200) {
-      doneState = DoneState.DONE;
-      result = resModel.result;
-      resultText = resModel.resultText;
-    } else {
-      doneState = DoneState.FAIL;
+    switch (resModel.resultState) {
+      case ResultState.INIT:
+        break;
+      case ResultState.AUTH_EXPIRED:
+        // TODO: Handle this case.
+        print('Token süresi geçti');
+        break;
+      case ResultState.SERVICE_ERROR:
+        doneState = DoneState.FAIL;
+        break;
+      case ResultState.DONE:
+        doneState = DoneState.DONE;
+        result = resModel.result;
+        resultText = resModel.resultText;
+        break;
     }
     notifyListeners();
   }

@@ -25,7 +25,8 @@ class QualityRequestModel {
 
   Map<String, dynamic> _toMap() {
     return {
-      'location': "(${location.latitude},${location.longitude})",
+      'longitude': location.longitude,
+      'latitude': location.latitude,
       'age': age,
       'floors': floors,
       'height': height,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ornek1/model/user_model.dart';
 import 'package:ornek1/service/model/auth_request_model.dart';
 import 'package:ornek1/service/model/auth_response_model.dart';
 import 'package:ornek1/service/web_service.dart';
@@ -12,6 +13,8 @@ class AuthProvider with ChangeNotifier {
   String username;
   String password;
 
+  UserModel userModel;
+
   login() async {
     loginState = LoginState.LOADING;
     notifyListeners();
@@ -19,14 +22,19 @@ class AuthProvider with ChangeNotifier {
       username: username,
       password: password,
     );
+
     AuthResponseModel resModel;
     resModel = await WebService().login(reqModel);
-    if (resModel == null) {
-      // TODO hataları düzgün handle et
-      loginState = LoginState.WRONG_PASSWORD;
-    } else {
-      loginState = LoginState.DONE;
+
+    if (resModel.loginState == LoginState.DONE) {
+      userModel = UserModel(
+        username: reqModel.username,
+        password: reqModel.password,
+        access: resModel.access,
+        refresh: resModel.refresh,
+      );
     }
+    loginState = resModel.loginState;
     notifyListeners();
   }
 

@@ -81,11 +81,7 @@ class ResultPage extends StatelessWidget
             child: Column(
               children: [
                 Text(
-                  _qualityProvider.resultText +
-                          _qualityProvider.resultText +
-                          _qualityProvider.resultText +
-                          _qualityProvider.resultText ??
-                      "70.satır",
+                  _qualityProvider.resultText,
                   textAlign: TextAlign.center,
                   style: fit(
                     tsTitle2_350,

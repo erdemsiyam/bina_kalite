@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ornek1/provider/auth_provider.dart';
 import 'package:ornek1/provider/quality_provider.dart';
 import 'package:ornek1/ui/page/quality/quality_page/page_views/abstract/IPageView.dart';
 import 'package:ornek1/ui/page/quality/quality_page/page_views/enum/enums.dart';
@@ -40,6 +41,8 @@ class _QualityPage extends State<QualityPage> with Responsive {
     print('quality ss : ${MediaQuery.of(context).size.shortestSide}');
     _qualityProvider = context
         .watch<QualityProvider>(); //Provider.of<QualityProvider>(context);
+    _qualityProvider.userModel =
+        Provider.of<AuthProvider>(context, listen: false).userModel;
     if (_pageViews.length == 0) {
       _pageViews.add(
         Pv01Location(

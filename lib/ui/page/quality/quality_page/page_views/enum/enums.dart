@@ -15,3 +15,4 @@ enum CorrosionAnswer { INIT, YES, NO }
 enum ShopAnswer { INIT, YES, NO }
 enum ContiguousAnswer { INIT, YES, NO }
 enum ResultAnswer { INIT, LOW_RISK, MEDIUM_RISK, HIGH_RISK, VERY_HIGH_RISK }
+enum ResultState { INIT, AUTH_EXPIRED, SERVICE_ERROR, DONE }

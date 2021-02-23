@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:ornek1/provider/auth_provider.dart';
 import 'package:ornek1/provider/quality_provider.dart';
 import 'package:ornek1/ui/page/auth/login_page/login_page.dart';
-import 'package:ornek1/ui/page/home/home_page.dart';
+import 'package:ornek1/ui/page/home/home_page/home_page.dart';
 import 'package:ornek1/ui/page/quality/quality_page/quality_page.dart';
 import 'package:ornek1/ui/constants/constant.dart';
 import 'package:provider/provider.dart';
