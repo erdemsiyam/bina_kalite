@@ -59,6 +59,16 @@ flutter:
      - assets/images/auth/google.svg
      - assets/images/auth/twitter.svg
      - assets/images/auth/linkedin.svg
+     - assets/images/home/user.svg
+     - assets/images/home/location.svg
+     - assets/images/home/clock.svg
+     - assets/images/home/like.svg
+     - assets/images/home/settings.svg
+     - assets/images/home/info.svg
+     - assets/images/home/circle1.svg
+     - assets/images/home/circle2.svg
+     - assets/images/home/circle3.svg
+     - assets/images/services/building1.svg
     # - images/auth/building.png
     # - images/auth/facebook.png
     # - images/auth/google.png
