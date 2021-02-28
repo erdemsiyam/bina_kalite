@@ -10,20 +10,22 @@ import 'package:ornek1/ui/page/services/services_page.dart';
 import 'package:provider/provider.dart';
 
 main() => runApp(
-      MultiProvider(providers: [
-        ChangeNotifierProvider(
-          create: (_) => QualityProvider(),
-          lazy: false,
-        ),
-        ChangeNotifierProvider(
-          create: (_) => AuthProvider(),
-          lazy: false,
-        ),
-      ], child: MyApp()
-          // DevicePreview(
-          //   builder: (context) => MyApp(),
-          // ),
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+            create: (_) => QualityProvider(),
+            lazy: false,
           ),
+          ChangeNotifierProvider(
+            create: (_) => AuthProvider(),
+            lazy: false,
+          ),
+        ],
+        child: MyApp(),
+        //     DevicePreview(
+        //   builder: (context) => MyApp(),
+        // ),
+      ),
     );
 
 class MyApp extends StatelessWidget {
