@@ -71,6 +71,7 @@ class WebService {
       case 200:
         resModel = AuthResponseModel.success(response.body);
         break;
+      case 400:
       case 401:
         resModel = AuthResponseModel.wrongPassword();
         break;

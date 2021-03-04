@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ornek1/ui/page/auth/login_page/enum/enums.dart';
 import 'package:ornek1/ui/page/auth/login_page/parts/wrong_password_part.dart';
+import 'package:ornek1/ui/page/home/home_page/home_page.dart';
 import 'package:ornek1/ui/page/quality/quality_page/quality_page.dart';
 import 'package:provider/provider.dart';
 import 'package:ornek1/provider/auth_provider.dart';
@@ -75,7 +76,8 @@ class _LoginPageState extends State<LoginPage> {
       case LoginState.SERVICE_ERROR:
         return [Text('Server Hatası')]; // TODO server hata
       case LoginState.DONE:
-        goToQualityPage();
+        return [Container()];
+      // goToQualityPage();
     }
     return [Container()];
   }
@@ -112,7 +114,7 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => QualityPage(),
+            builder: (context) => HomePage(),
           ),
         );
       },

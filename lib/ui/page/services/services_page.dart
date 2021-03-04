@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:ornek1/ui/page/quality/quality_page/quality_page.dart';
 import 'package:ornek1/ui/utils/Responsive.dart';
 
 class ServicesPage extends StatelessWidget with Responsive {
@@ -26,7 +27,7 @@ class ServicesPage extends StatelessWidget with Responsive {
           children: [
             backPart(),
             titlePart(),
-            servicesPart(),
+            servicesPart(context),
             footerPart(),
           ],
         ),
@@ -76,7 +77,7 @@ class ServicesPage extends StatelessWidget with Responsive {
     );
   }
 
-  Widget servicesPart() {
+  Widget servicesPart(BuildContext context) {
     return Expanded(
       child: Padding(
         padding: EdgeInsets.only(
@@ -87,16 +88,27 @@ class ServicesPage extends StatelessWidget with Responsive {
           controller: pageController,
           // pageSnapping:	true,
           children: [
-            servicePaket1(),
-            servicePaket1(),
-            servicePaket1(),
+            servicePaket1(
+              () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => QualityPage(),
+                  ),
+                );
+              },
+            ),
+            servicePaket1(() {}),
+            servicePaket1(() {}),
           ],
         ),
       ),
     );
   }
 
-  Widget servicePaket1() {
+  Widget servicePaket1(
+    Function onTap,
+  ) {
     return Center(
       child: Padding(
         padding: EdgeInsets.symmetric(
@@ -230,7 +242,7 @@ class ServicesPage extends StatelessWidget with Responsive {
                       fontSize: fit(13, 14, 24, 28),
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: onTap,
                   shape: RoundedRectangleBorder(
                     side: BorderSide(
                       color: Colors.amber[400],

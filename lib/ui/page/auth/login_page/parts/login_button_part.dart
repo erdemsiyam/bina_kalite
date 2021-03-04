@@ -36,7 +36,7 @@ class LoginButtonPart extends StatelessWidget with Responsive {
           borderRadius: BorderRadius.circular(60.0),
         ),
         onPressed: () async {
-          await _authProvider.login();
+          await _authProvider.login(context);
         },
       ),
     );
